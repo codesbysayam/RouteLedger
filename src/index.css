@@ -1,0 +1,80 @@
+@import "./styles/tokens.css";
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, kbd, samp, pre, .font-mono {
+    font-family: var(--font-mono) !important;
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+/* Dedicated Commercial Logistics Print Stylesheet */
+@media print {
+  body, html {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remove all interactive app chrome, sidebar, nav buttons */
+  aside,
+  header,
+  nav,
+  button,
+  .print\:hidden,
+  #routeledger-sidebar,
+  #app-top-header {
+    display: none !important;
+  }
+
+  /* Make workspace occupy full print sheet */
+  main, #app-workspace-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page-break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 8mm;
+  }
+}
+
+/* Operational high-density scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #d9dde3;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a4acb5;
+}

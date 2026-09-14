@@ -1,0 +1,6 @@
+{
+  "name": "RouteLedger — Commercial Route & HOS Planning",
+  "description": "Commercial route planning and FMCSA 49 CFR Part 395 Hours of Service compliance engine with ELD daily driver logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

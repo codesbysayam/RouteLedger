@@ -1,0 +1,70 @@
+:root {
+  /* ==========================================================================
+     ROUTELEDGER BRAND IDENTITY TOKENS
+     ========================================================================== */
+  --brand-teal: #0F9D8A;
+  --brand-teal-dark: #087F70;
+  --brand-teal-soft: #E8F7F4;
+  --brand-teal-border: #BCE7DF;
+
+  /* Primary Action / Routing */
+  --primary: #2563EB;
+  --primary-dark: #1D4ED8;
+  --primary-soft: #EFF6FF;
+
+  /* ==========================================================================
+     SURFACES & BACKGROUND (3 Tiers Only)
+     ========================================================================== */
+  --bg-workspace: #F7F8FA;    /* Level 0: Viewport backdrop */
+  --bg-surface: #FFFFFF;      /* Level 1: Primary cards/panels */
+  --bg-subtle: #F3F4F6;       /* Level 2: Nested wells / controls */
+  --bg-sidebar: #FBFCFD;      /* Sidebar desktop surface */
+
+  /* ==========================================================================
+     TYPOGRAPHY COLORS
+     ========================================================================== */
+  --text-primary: #111827;
+  --text-secondary: #5B6470;
+  --text-tertiary: #7A8490;
+  --text-disabled: #A4ACB5;
+
+  /* ==========================================================================
+     BORDERS
+     ========================================================================== */
+  --border-subtle: #E5E7EB;
+  --border-default: #E2E6EA;
+  --border-strong: #D1D5DB;
+
+  /* ==========================================================================
+     SEMANTIC STATUS
+     ========================================================================== */
+  --success: #16803C;
+  --success-soft: #ECFDF3;
+  --warning: #B54708;
+  --warning-soft: #FFFAEB;
+  --danger: #B42318;
+  --danger-soft: #FEF3F2;
+
+  /* ==========================================================================
+     FONTS
+     ========================================================================== */
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ==========================================================================
+     RESTRAINED RADII (6px, 7px, 8px, 10px)
+     ========================================================================== */
+  --radius-xs: 6px;
+  --radius-button: 7px;
+  --radius-input: 7px;
+  --radius-panel: 8px;
+  --radius-map: 10px;
+
+  /* ==========================================================================
+     SHADOWS (Subtle & Restrained)
+     ========================================================================== */
+  --shadow-none: none;
+  --shadow-raised: 0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-popover: 0 10px 30px rgba(16, 24, 40, 0.12);
+}
+
