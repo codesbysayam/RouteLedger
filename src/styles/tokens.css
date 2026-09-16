@@ -1,70 +1,73 @@
 :root {
   /* ==========================================================================
-     ROUTELEDGER BRAND IDENTITY TOKENS
+     ROUTELEDGER — COMMERCIAL LOGISTICS DESIGN SYSTEM (LIGHT & REFINED)
      ========================================================================== */
-  --brand-teal: #0F9D8A;
-  --brand-teal-dark: #087F70;
-  --brand-teal-soft: #E8F7F4;
-  --brand-teal-border: #BCE7DF;
 
-  /* Primary Action / Routing */
-  --primary: #2563EB;
-  --primary-dark: #1D4ED8;
-  --primary-soft: #EFF6FF;
+  /* WORKSPACE BACKGROUND */
+  --rl-bg: #EEF3F8;
+  --rl-bg-soft: #F1F5F9;
 
-  /* ==========================================================================
-     SURFACES & BACKGROUND (3 Tiers Only)
-     ========================================================================== */
-  --bg-workspace: #F7F8FA;    /* Level 0: Viewport backdrop */
-  --bg-surface: #FFFFFF;      /* Level 1: Primary cards/panels */
-  --bg-subtle: #F3F4F6;       /* Level 2: Nested wells / controls */
-  --bg-sidebar: #FBFCFD;      /* Sidebar desktop surface */
+  /* SURFACES */
+  --rl-surface: #FFFFFF;
+  --rl-surface-soft: #F8FAFC;
 
-  /* ==========================================================================
-     TYPOGRAPHY COLORS
-     ========================================================================== */
-  --text-primary: #111827;
-  --text-secondary: #5B6470;
-  --text-tertiary: #7A8490;
-  --text-disabled: #A4ACB5;
+  /* TINTED OPERATIONAL SURFACES */
+  --rl-surface-blue: #EFF6FF;
+  --rl-surface-cyan: #ECFEFF;
+  --rl-surface-indigo: #F3F1FF;
+  --rl-surface-teal: #ECFDF8;
+  --rl-surface-green: #EFFBF3;
+  --rl-surface-amber: #FFF8E8;
+  --rl-surface-red: #FFF1F2;
 
-  /* ==========================================================================
-     BORDERS
-     ========================================================================== */
-  --border-subtle: #E5E7EB;
-  --border-default: #E2E6EA;
-  --border-strong: #D1D5DB;
+  /* BORDERS */
+  --rl-border: #D9E2EC;
+  --rl-border-strong: #C7D4E2;
+  --rl-border-subtle: #E2E8F0;
 
-  /* ==========================================================================
-     SEMANTIC STATUS
-     ========================================================================== */
-  --success: #16803C;
-  --success-soft: #ECFDF3;
-  --warning: #B54708;
-  --warning-soft: #FFFAEB;
-  --danger: #B42318;
-  --danger-soft: #FEF3F2;
+  /* SEMANTIC BRAND & OPERATIONAL COLORS */
+  --rl-blue: #2563EB;
+  --rl-blue-light: #EFF6FF;
 
-  /* ==========================================================================
-     FONTS
-     ========================================================================== */
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --rl-cyan: #0891B2;
+  --rl-cyan-light: #ECFEFF;
+
+  --rl-indigo: #6366F1;
+  --rl-indigo-light: #F0F0FF;
+
+  --rl-teal: #0F9F8F;
+  --rl-teal-light: #ECFDF8;
+
+  --rl-green: #16A34A;
+  --rl-green-light: #EFFBF3;
+
+  --rl-amber: #D97706;
+  --rl-amber-light: #FFF7E6;
+
+  --rl-red: #DC2626;
+  --rl-red-light: #FFF1F2;
+
+  /* TYPOGRAPHY */
+  --rl-text-primary: #172033;
+  --rl-text-secondary: #526174;
+  --rl-text-muted: #7A8798;
+
+  /* Base token mappings */
+  --rl-text: var(--rl-text-primary);
+
+  /* Radii */
+  --rl-radius-sm: 6px;
+  --rl-radius-md: 8px;
+  --rl-radius-lg: 10px;
+
+  /* Motion */
+  --rl-fast: 150ms ease;
+  --rl-normal: 200ms ease;
+  --rl-slow: 300ms ease;
+
+  /* Fonts */
+  --font-sans: 'Geist Sans', 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-
-  /* ==========================================================================
-     RESTRAINED RADII (6px, 7px, 8px, 10px)
-     ========================================================================== */
-  --radius-xs: 6px;
-  --radius-button: 7px;
-  --radius-input: 7px;
-  --radius-panel: 8px;
-  --radius-map: 10px;
-
-  /* ==========================================================================
-     SHADOWS (Subtle & Restrained)
-     ========================================================================== */
-  --shadow-none: none;
-  --shadow-raised: 0 1px 3px rgba(16, 24, 40, 0.06);
-  --shadow-popover: 0 10px 30px rgba(16, 24, 40, 0.12);
 }
+
 

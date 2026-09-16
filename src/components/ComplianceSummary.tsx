@@ -1,5 +1,6 @@
 import React from 'react';
 import { HOSValidationResult } from '../types.ts';
+import { ShieldCheck, AlertTriangle } from 'lucide-react';
 
 interface ComplianceSummaryProps {
   validation?: HOSValidationResult;
@@ -30,74 +31,91 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
 
   const rows = [
     {
-      rule: '11-hour driving limit',
+      rule: '11-Hour Driving Limit',
       statute: '§ 395.3(a)(3)',
-      status: maxDrive <= 11.0 ? 'OK' : 'VIOLATION',
+      status: maxDrive <= 11.0 ? 'PASS' : 'VIOLATION',
       remaining: `${formatHoursMins(driveMargin)} remaining`,
       limit: '11.0h max',
       observed: `${maxDrive.toFixed(1)}h`,
     },
     {
-      rule: '14-hour window',
+      rule: '14-Hour Duty Window',
       statute: '§ 395.3(a)(2)',
-      status: maxDuty <= 14.0 ? 'OK' : 'VIOLATION',
+      status: maxDuty <= 14.0 ? 'PASS' : 'VIOLATION',
       remaining: `${formatHoursMins(dutyMargin)} remaining`,
       limit: '14.0h window',
       observed: `${maxDuty.toFixed(1)}h`,
     },
     {
-      rule: '30-minute break',
+      rule: '30-Minute Rest Break',
       statute: '§ 395.3(a)(3)(ii)',
-      status: 'OK',
-      remaining: 'Required within 8h driving',
+      status: 'PASS',
+      remaining: 'Scheduled ≤ 8h driving',
       limit: '30m consecutive',
-      observed: 'Scheduled',
+      observed: 'Enforced',
     },
     {
-      rule: '70-hour / 8-day cycle',
+      rule: '70-Hour / 8-Day Cycle',
       statute: '§ 395.3(b)',
-      status: cycleTotal <= 70.0 ? 'OK' : 'VIOLATION',
+      status: cycleTotal <= 70.0 ? 'PASS' : 'VIOLATION',
       remaining: `${formatHoursMins(cycleMargin)} remaining`,
       limit: '70.0h limit',
       observed: `${cycleTotal.toFixed(1)}h`,
     },
     {
-      rule: '10-hour consecutive rest',
+      rule: '10-Hour Consecutive Rest',
       statute: '§ 395.3(a)(1)',
-      status: 'OK',
+      status: 'PASS',
       remaining: 'Satisfied before shift',
       limit: '10.0h off-duty',
-      observed: 'Enforced',
+      observed: 'Scheduled',
     },
   ];
 
   return (
     <div
       id="hos-compliance-table-container"
-      className="bg-white border border-[#E2E6EA] rounded-[8px] overflow-hidden select-none shadow-none"
+      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.05)] relative"
     >
-      {/* Header: COMPLIANCE | FMCSA 49 CFR Part 395 | ● COMPLIANT */}
-      <div className="px-5 py-3.5 border-b border-[#E2E6EA] flex items-center justify-between">
+      {/* 3px Top Accent Line */}
+      <div
+        className={`h-[3px] w-full shrink-0 ${
+          isCompliant ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
+        }`}
+      />
+
+      {/* Header: COMPLIANCE AUDIT · FMCSA 49 CFR Part 395 */}
+      <div className="px-5 py-3.5 border-b border-[#D9E2EC] flex items-center justify-between bg-[#F8FAFC]">
         <div className="flex items-center gap-2.5">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-semibold text-[#5B6470] tracking-wider uppercase">
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isCompliant ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
+              }`}
+            />
+            <span
+              className={`text-[11px] font-bold tracking-[0.08em] uppercase ${
+                isCompliant ? 'text-[#15803D]' : 'text-[#DC2626]'
+              }`}
+            >
               COMPLIANCE AUDIT
             </span>
-            <div className="w-5 h-[2px] bg-[#0F9D8A] mt-0.5 rounded-full" />
           </div>
-          <span className="text-[#D1D5DB]">|</span>
-          <span className="text-[11.5px] text-[#5B6470] font-mono">FMCSA 49 CFR Part 395</span>
+          <span className="text-[#D9E2EC]">|</span>
+          <span className="text-[11.5px] text-[#526174] font-mono font-medium">
+            FMCSA 49 CFR Part 395
+          </span>
         </div>
 
         <div>
           {isCompliant ? (
-            <div className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#087F70] bg-[#E8F7F4] border border-[#BCE7DF] px-3 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0F9D8A]"></span>
-              <span>COMPLIANT</span>
+            <div className="inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0] px-3 py-1 rounded-[6px] shadow-xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
+              <span>FMCSA COMPLIANT</span>
             </div>
           ) : (
-            <div className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#B42318] bg-[#FEF3F2] border border-[#FECDCA] px-3 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B42318]"></span>
+            <div className="inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#DC2626] bg-[#FFF1F2] border border-[#FECDD3] px-3 py-1 rounded-[6px] shadow-xs">
+              <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626]" />
               <span>VIOLATION DETECTED ({violations.length})</span>
             </div>
           )}
@@ -106,10 +124,10 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
 
       {/* Violation Details if Any */}
       {!isCompliant && violations.length > 0 && (
-        <div className="px-5 py-2.5 bg-[#FEF3F2] border-b border-[#FECDCA] text-[12px] text-[#B42318] space-y-1">
+        <div className="px-5 py-3 bg-[#FFF1F2] border-b border-[#FECDD3] text-[12px] text-[#991B1B] space-y-1.5">
           {violations.map((v: any, idx) => (
             <div key={idx} className="flex items-start gap-2 font-mono text-[12px]">
-              <span className="font-bold">•</span>
+              <span className="font-bold text-[#DC2626]">•</span>
               <span>
                 {typeof v === 'string'
                   ? v
@@ -120,49 +138,59 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
         </div>
       )}
 
-      {/* Tabular Audit Rows: RULE, STATUTE, STATUS, REMAINING, LIMIT, OBSERVED */}
+      {/* Tabular Audit Rows with alternating light surfaces */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-[13px] border-collapse">
           <thead>
-            <tr className="border-b border-[#E2E6EA] text-[10px] font-semibold text-[#7A8490] uppercase tracking-wider bg-[#FBFCFD]">
-              <th className="py-2.5 px-5 font-semibold">RULE</th>
-              <th className="py-2.5 px-4 font-semibold">STATUTE</th>
-              <th className="py-2.5 px-4 font-semibold">STATUS</th>
-              <th className="py-2.5 px-4 font-semibold">REMAINING</th>
-              <th className="py-2.5 px-4 font-semibold">LIMIT</th>
-              <th className="py-2.5 px-5 font-semibold text-right">OBSERVED</th>
+            <tr className="border-b border-[#D9E2EC] text-[10.5px] font-bold text-[#526174] uppercase tracking-wider bg-[#F8FAFC]">
+              <th className="py-2.5 px-5 font-bold">RULE</th>
+              <th className="py-2.5 px-4 font-bold">STATUTE</th>
+              <th className="py-2.5 px-4 font-bold">STATUS</th>
+              <th className="py-2.5 px-4 font-bold">REMAINING</th>
+              <th className="py-2.5 px-4 font-bold">LIMIT</th>
+              <th className="py-2.5 px-5 font-bold text-right">OBSERVED</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E2E6EA] text-[#111827]">
+          <tbody className="divide-y divide-[#E2E8F0] text-[#172033]">
             {rows.map((row, idx) => {
-              const isPass = row.status === 'OK';
+              const isPass = row.status === 'PASS';
+              const isOdd = idx % 2 === 1;
               return (
-                <tr key={idx} className="hover:bg-[#F7F8FA] transition-colors">
-                  <td className="py-3 px-5 font-medium text-[#111827]">
+                <tr
+                  key={idx}
+                  className={`transition-colors duration-150 ${
+                    isOdd ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]'
+                  } hover:bg-[#F1F5F9]`}
+                >
+                  <td className="py-3 px-5 font-semibold text-[#172033]">
                     {row.rule}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-[#5B6470]">
+                  <td className="py-3 px-4 font-mono text-[11px] text-[#526174]">
                     {row.statute}
                   </td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
+                      className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold px-2 py-0.5 rounded-[4px] ${
                         isPass
-                          ? 'text-[#087F70] bg-[#E8F7F4] border border-[#BCE7DF]'
-                          : 'text-[#B42318] bg-[#FEF3F2] border border-[#FECDCA]'
+                          ? 'text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0]'
+                          : 'text-[#DC2626] bg-[#FFF1F2] border border-[#FECDD3]'
                       }`}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full ${isPass ? 'bg-[#0F9D8A]' : 'bg-[#B42318]'}`} />
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isPass ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
+                        }`}
+                      />
                       {row.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-mono text-[12px] text-[#5B6470]">
+                  <td className="py-3 px-4 font-mono text-[12px] font-medium text-[#172033]">
                     {row.remaining}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[12px] text-[#5B6470]">
+                  <td className="py-3 px-4 font-mono text-[12px] text-[#526174]">
                     {row.limit}
                   </td>
-                  <td className="py-3 px-5 font-mono text-[12px] font-semibold text-[#111827] text-right">
+                  <td className="py-3 px-5 font-mono text-[12px] font-bold text-[#172033] text-right">
                     {row.observed}
                   </td>
                 </tr>
@@ -174,4 +202,5 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
     </div>
   );
 };
+
 

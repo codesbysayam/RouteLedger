@@ -146,14 +146,14 @@ export default function App() {
     >
       {/* Error Banner */}
       {error && (
-        <div className="mb-4 bg-[#FEF3F2] border border-[#FECDCA] text-[#B42318] p-3 rounded-[8px] flex items-center justify-between gap-3 text-xs">
+        <div className="mb-4 bg-[#3B151E] border border-[#5C232E] text-[#FFB4BC] p-3 rounded-[8px] flex items-center justify-between gap-3 text-xs shadow-lg">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#FF5C6C]" />
             <span>{error}</span>
           </div>
           <button
             onClick={() => setError(null)}
-            className="font-semibold hover:underline cursor-pointer"
+            className="font-semibold text-[#FF5C6C] hover:underline cursor-pointer"
           >
             Dismiss
           </button>

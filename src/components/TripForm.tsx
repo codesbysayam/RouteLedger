@@ -72,6 +72,17 @@ export const TripForm: React.FC<TripFormProps> = ({
   });
 
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingStep(0);
+      const interval = setInterval(() => {
+        setLoadingStep((prev) => (prev < 4 ? prev + 1 : prev));
+      }, 420);
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
 
   // Autocomplete Suggestions with cache
   const [originSuggestions, setOriginSuggestions] = useState<LocationPoint[]>([]);
@@ -132,272 +143,364 @@ export const TripForm: React.FC<TripFormProps> = ({
 
   const cycleVal = Math.min(70, Math.max(0, Number(currentCycleUsed) || 0));
   const cycleRemaining = Math.max(0, 70 - cycleVal);
+  const cyclePercent = (cycleVal / 70) * 100;
+  const cycleColor =
+    cyclePercent > 85
+      ? '#DC2626'
+      : cyclePercent > 60
+      ? '#F59E0B'
+      : '#0F9D8A';
 
   return (
     <form
       id="trip-planner-form"
       onSubmit={handleSubmit}
-      className="bg-white border border-[#E5E7EB] rounded-[8px] p-5 sm:p-6 select-none shadow-none"
+      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.06)]"
     >
-      {/* Form Section Header */}
-      <div className="flex items-center justify-between pb-3 mb-5 border-b border-[#F3F4F6]">
-        <div>
-          <div className="text-[10.5px] font-semibold text-[#5B6470] tracking-wider uppercase flex items-center gap-1.5 mb-0.5">
-            <span>PLAN TRIP</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0F9D8A]" />
+      {/* 3px Top Accent Line: #2563EB Solid */}
+      <div className="h-[3px] w-full bg-[#2563EB] shrink-0" />
+
+      {/* Form Section Header: Light Surface with border #D9E2EC */}
+      <div className="bg-[#F8FAFC] px-5 sm:px-6 pt-3.5 pb-3 border-b border-[#D9E2EC]">
+        <div className="flex items-center justify-between mb-1">
+          <div className="text-[11px] font-bold text-[#2563EB] tracking-[0.08em] uppercase flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
+            <span>TRIP PARAMETERS</span>
           </div>
-          <p className="text-[13px] text-[#5B6470]">
-            Define the trip waypoints and driver availability.
-          </p>
+          <span className="text-[11px] font-mono font-semibold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-0.5 rounded-full border border-[#BFD5FF]">
+            FMCSA 70h / 8d Rule
+          </span>
         </div>
+        <p className="text-[12.5px] text-[#526174]">
+          Commercial Route &amp; HOS Configuration
+        </p>
       </div>
 
-      {/* 3-Step Physical Journey Progression Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-5">
-        {/* Origin */}
-        <div className="relative">
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[12px] font-medium text-[#111827] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#111827]" />
-              <span>Origin Location</span>
-            </label>
-            <span className="text-[11px] text-[#7A8490] font-mono">Start point</span>
-          </div>
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              value={origin}
-              onChange={(e) => {
-                setOrigin(e.target.value);
-                if (pickup === origin) setPickup(e.target.value);
-                handleSearch(e.target.value, 'origin');
-              }}
-              onFocus={() => setActiveInput('origin')}
-              onBlur={() => setTimeout(() => setActiveInput(null), 250)}
-              placeholder="e.g. Richmond, VA"
-              className="w-full h-[44px] px-3.5 text-[14px] text-[#111827] bg-white border border-[#D9DDE3] rounded-[7px] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/12 transition-colors placeholder:text-[#98A2B3]"
-            />
-            {origin && (
-              <button
-                type="button"
-                onClick={() => {
-                  setOrigin('');
-                  setOriginSuggestions([]);
-                }}
-                className="absolute right-3 text-[#7A8490] hover:text-[#111827] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {activeInput === 'origin' && originSuggestions.length > 0 && (
-            <div className="absolute top-[72px] left-0 right-0 z-30 bg-white border border-[#D9DDE3] rounded-[7px] shadow-md py-1 overflow-hidden">
-              {originSuggestions.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onMouseDown={() => {
-                    setOrigin(item.display_name);
-                    if (pickup === origin) setPickup(item.display_name);
-                    setOriginSuggestions([]);
+      <div className="p-5 sm:p-6 pt-5 bg-[#FFFFFF]">
+        {/* 3-Step Connected Journey Progression */}
+        <div className="relative mb-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-4 relative z-10">
+            {/* 1. Origin (Cyan #0891B2) Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#0891B2] rounded-[8px] p-3.5 shadow-xs">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#ECFEFF] text-[#0891B2] flex items-center justify-center shrink-0 border border-[#A5F3FC]">
+                    <MapPin className="w-3.5 h-3.5" />
+                  </div>
+                  <label className="text-[12px] font-bold text-[#0891B2]">
+                    Origin Location
+                  </label>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#0891B2] bg-[#ECFEFF] px-1.5 py-0.5 rounded border border-[#A5F3FC]">
+                  STEP 01
+                </span>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={origin}
+                  onChange={(e) => {
+                    setOrigin(e.target.value);
+                    if (pickup === origin) setPickup(e.target.value);
+                    handleSearch(e.target.value, 'origin');
                   }}
-                  className="w-full text-left px-3.5 py-2 text-[12.5px] text-[#111827] hover:bg-[#F3F4F6] transition-colors truncate block"
-                >
-                  {item.display_name}
-                </button>
-              ))}
+                  onFocus={() => setActiveInput('origin')}
+                  onBlur={() => setTimeout(() => setActiveInput(null), 250)}
+                  placeholder="e.g. Richmond, VA"
+                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#0891B2]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                />
+                {origin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrigin('');
+                      setOriginSuggestions([]);
+                    }}
+                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {activeInput === 'origin' && originSuggestions.length > 0 && (
+                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-[7px] shadow-xl py-1 overflow-hidden">
+                  {originSuggestions.map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onMouseDown={() => {
+                        setOrigin(item.display_name);
+                        if (pickup === origin) setPickup(item.display_name);
+                        setOriginSuggestions([]);
+                      }}
+                      className="w-full text-left px-3.5 py-2 text-[12px] text-[#172033] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors truncate block cursor-pointer"
+                    >
+                      {item.display_name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Pickup Loading Terminal */}
-        <div className="relative">
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[12px] font-medium text-[#111827] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-              <span>Cargo Pickup</span>
-            </label>
-            <span className="text-[11px] text-[#7A8490] font-mono">Loading dock</span>
-          </div>
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
-              placeholder="e.g. Richmond Distribution Center"
-              className="w-full h-[44px] px-3.5 text-[14px] text-[#111827] bg-white border border-[#D9DDE3] rounded-[7px] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/12 transition-colors placeholder:text-[#98A2B3]"
-            />
-            {pickup && (
-              <button
-                type="button"
-                onClick={() => setPickup('')}
-                className="absolute right-3 text-[#7A8490] hover:text-[#111827] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
+            {/* 2. Cargo Pickup (Blue #2563EB) Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#2563EB] rounded-[8px] p-3.5 shadow-xs">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFD5FF]">
+                    <Building2 className="w-3.5 h-3.5" />
+                  </div>
+                  <label className="text-[12px] font-bold text-[#2563EB]">
+                    Cargo Pickup
+                  </label>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded border border-[#BFD5FF]">
+                  STEP 02
+                </span>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={pickup}
+                  onChange={(e) => setPickup(e.target.value)}
+                  placeholder="e.g. Richmond Distribution Center"
+                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                />
+                {pickup && (
+                  <button
+                    type="button"
+                    onClick={() => setPickup('')}
+                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
 
-        {/* Destination */}
-        <div className="relative">
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[12px] font-medium text-[#111827] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#16803C]" />
-              <span>Final Destination</span>
-            </label>
-            <span className="text-[11px] text-[#7A8490] font-mono">Consignee</span>
-          </div>
-          <div className="relative flex items-center">
-            <input
-              type="text"
-              value={destination}
-              onChange={(e) => {
-                setDestination(e.target.value);
-                handleSearch(e.target.value, 'dest');
-              }}
-              onFocus={() => setActiveInput('dest')}
-              onBlur={() => setTimeout(() => setActiveInput(null), 250)}
-              placeholder="e.g. Newark, NJ"
-              className="w-full h-[44px] px-3.5 text-[14px] text-[#111827] bg-white border border-[#D9DDE3] rounded-[7px] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/12 transition-colors placeholder:text-[#98A2B3]"
-            />
-            {destination && (
-              <button
-                type="button"
-                onClick={() => {
-                  setDestination('');
-                  setDestSuggestions([]);
-                }}
-                className="absolute right-3 text-[#7A8490] hover:text-[#111827] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {activeInput === 'dest' && destSuggestions.length > 0 && (
-            <div className="absolute top-[72px] left-0 right-0 z-30 bg-white border border-[#D9DDE3] rounded-[7px] shadow-md py-1 overflow-hidden">
-              {destSuggestions.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onMouseDown={() => {
-                    setDestination(item.display_name);
-                    setDestSuggestions([]);
+            {/* 3. Destination (Indigo #6366F1) Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#6366F1] rounded-[8px] p-3.5 shadow-xs">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#F3F1FF] text-[#6366F1] flex items-center justify-center shrink-0 border border-[#DDD6FE]">
+                    <MapPin className="w-3.5 h-3.5" />
+                  </div>
+                  <label className="text-[12px] font-bold text-[#6366F1]">
+                    Destination
+                  </label>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-[#6366F1] bg-[#F3F1FF] px-1.5 py-0.5 rounded border border-[#DDD6FE]">
+                  STEP 03
+                </span>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={destination}
+                  onChange={(e) => {
+                    setDestination(e.target.value);
+                    handleSearch(e.target.value, 'dest');
                   }}
-                  className="w-full text-left px-3.5 py-2 text-[12.5px] text-[#111827] hover:bg-[#F3F4F6] transition-colors truncate block"
-                >
-                  {item.display_name}
-                </button>
-              ))}
+                  onFocus={() => setActiveInput('dest')}
+                  onBlur={() => setTimeout(() => setActiveInput(null), 250)}
+                  placeholder="e.g. Newark, NJ"
+                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#6366F1]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                />
+                {destination && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDestination('');
+                      setDestSuggestions([]);
+                    }}
+                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {activeInput === 'dest' && destSuggestions.length > 0 && (
+                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-[7px] shadow-xl py-1 overflow-hidden">
+                  {destSuggestions.map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onMouseDown={() => {
+                        setDestination(item.display_name);
+                        setDestSuggestions([]);
+                      }}
+                      className="w-full text-left px-3.5 py-2 text-[12px] text-[#172033] hover:bg-[#F3F1FF] hover:text-[#6366F1] transition-colors truncate block cursor-pointer"
+                    >
+                      {item.display_name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Row 2: Operational Parameters (Departure + Cycle) & Action */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-4 items-end mb-2">
-        {/* Departure Time (3 cols) */}
-        <div className="md:col-span-3">
-          <label className="block text-[12px] font-medium text-[#111827] mb-1.5">
-            Departure Time
-          </label>
-          <input
-            type="time"
-            value={departureTime}
-            onChange={(e) => setDepartureTime(e.target.value)}
-            className="w-full h-[44px] px-3.5 text-[13px] font-mono text-[#111827] bg-white border border-[#D9DDE3] rounded-[7px] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/12 transition-colors"
-          />
-        </div>
-
-        {/* Current Cycle Used with thin progress bar (5 cols) */}
-        <div className="md:col-span-4">
-          <div className="flex justify-between items-center mb-1.5">
-            <label className="text-[12px] font-medium text-[#111827]">
-              Current Cycle Used
-            </label>
-            <span className="font-mono text-[11px] text-[#5B6470]">
-              {cycleVal.toFixed(1)}h used · <span className="text-[#087F70] font-semibold">{cycleRemaining.toFixed(1)}h left</span>
-            </span>
           </div>
-          <div className="relative flex flex-col justify-center">
-            <div className="relative flex items-center">
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                max="70"
-                value={currentCycleUsed}
-                onChange={(e) => setCurrentCycleUsed(parseFloat(e.target.value) || 0)}
-                className="w-full h-[44px] px-3.5 text-[13px] font-mono text-[#111827] bg-white border border-[#D9DDE3] rounded-[7px] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/12 transition-colors"
-              />
-              <span className="absolute right-3.5 text-[12px] font-mono text-[#7A8490] pointer-events-none">
-                / 70.0h
+        </div>
+
+        {/* Row 2: Operational Parameters (Departure + Cycle) & Action Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3.5 items-end mb-1">
+          {/* Departure Time (3 cols) */}
+          <div className="md:col-span-3">
+            <label className="block text-[12px] font-bold text-[#526174] mb-1">
+              Departure Time
+            </label>
+            <input
+              type="time"
+              value={departureTime}
+              onChange={(e) => setDepartureTime(e.target.value)}
+              className="w-full h-[40px] px-3.5 text-[13px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
+            />
+          </div>
+
+          {/* Current Cycle Used: 5 cols */}
+          <div className="md:col-span-4 bg-[#F8FAFC] border border-[#D9E2EC] border-l-4 border-l-[#16A34A] rounded-[8px] p-2.5">
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-[11px] font-bold text-[#16A34A] uppercase tracking-wider">
+                CURRENT CYCLE
+              </label>
+              <span className="font-mono text-[11px] text-[#526174]">
+                <span className="font-semibold text-[#172033]">{cycleVal.toFixed(1)}h</span> used ·{' '}
+                <span className="font-bold text-[#16A34A]">{cycleRemaining.toFixed(1)}h left</span>
               </span>
             </div>
-            {/* Visual thin progress bar */}
-            <div className="w-full h-[3px] bg-[#E5E7EB] rounded-full overflow-hidden mt-1.5">
-              <div
-                className={`h-full transition-all duration-300 ${
-                  cycleVal > 60 ? 'bg-[#B42318]' : cycleVal > 45 ? 'bg-[#B54708]' : 'bg-[#0F9D8A]'
-                }`}
-                style={{ width: `${Math.min(100, (cycleVal / 70) * 100)}%` }}
-              />
+            <div className="relative flex flex-col justify-center">
+              <div className="relative flex items-center">
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="70"
+                  value={currentCycleUsed}
+                  onChange={(e) => setCurrentCycleUsed(parseFloat(e.target.value) || 0)}
+                  className="w-full h-[32px] px-3 text-[13px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#16A34A]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
+                />
+                <span className="absolute right-3 text-[11px] font-mono text-[#7A8798] pointer-events-none">
+                  / 70.0h max
+                </span>
+              </div>
+              {/* Progress bar */}
+              <div className="w-full h-[4px] bg-[#E2E8F0] rounded-full overflow-hidden mt-1.5 border border-[#CBD5E1]">
+                <div
+                  className="h-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(100, cyclePercent)}%`,
+                    backgroundColor: cycleColor,
+                  }}
+                />
+              </div>
             </div>
+          </div>
+
+          {/* Advanced Disclosure Toggle */}
+          <div className="md:col-span-2 flex items-center h-[40px]">
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="inline-flex items-center justify-center gap-1.5 w-full h-full text-[12px] font-semibold text-[#526174] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] px-3 hover:bg-[#F8FAFC] hover:text-[#172033] cursor-pointer transition-colors shadow-xs"
+            >
+              <span>Parameters</span>
+              {showAdvanced ? (
+                <ChevronUp className="w-3.5 h-3.5 text-[#526174]" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5 text-[#526174]" />
+              )}
+            </button>
+          </div>
+
+          {/* Operational Action Buttons: Demo + Generate Route & Logs */}
+          <div className="md:col-span-3 flex items-center gap-2 h-[40px]">
+            {onLoadExample && (
+              <button
+                type="button"
+                onClick={onLoadExample}
+                disabled={isLoading}
+                className="h-full px-3 text-[12px] font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#BFD5FF] rounded-[8px] hover:bg-[#DBEAFE] transition-colors cursor-pointer shrink-0"
+              >
+                Demo
+              </button>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading || !origin.trim() || !destination.trim()}
+              className="flex-1 h-full px-4 text-[12.5px] font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-[8px] shadow-[0_4px_12px_rgba(37,99,235,0.20)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Planning...</span>
+                </>
+              ) : (
+                <>
+                  <Route className="w-4 h-4" />
+                  <span className="tracking-wide">GENERATE ROUTE &amp; LOGS</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Advanced Disclosure Toggle (2 cols) */}
-        <div className="md:col-span-2 flex items-center h-[44px] pb-1">
-          <button
-            type="button"
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="inline-flex items-center gap-1 text-[12.5px] font-medium text-[#5B6470] hover:text-[#111827] py-2 cursor-pointer transition-colors"
-          >
-            <span>Advanced options</span>
-            {showAdvanced ? (
-              <ChevronUp className="w-3.5 h-3.5" />
-            ) : (
-              <ChevronDown className="w-3.5 h-3.5" />
-            )}
-          </button>
-        </div>
-
-        {/* Primary Action Button (3 cols) */}
-        <div className="md:col-span-3 flex items-center justify-end pb-1">
-          <button
-            type="submit"
-            disabled={isLoading || !origin.trim() || !destination.trim()}
-            className="w-full h-[44px] px-5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[13.5px] font-medium rounded-[7px] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-xs"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Planning route...</span>
-              </>
-            ) : (
-              <>
-                <Route className="w-4 h-4" />
-                <span>Plan route</span>
-              </>
-            )}
-          </button>
-        </div>
+        {/* Technical Loading Console */}
+        {isLoading && (
+          <div className="mt-4 p-3.5 bg-[#F8FAFC] border border-[#D9E2EC] rounded-[8px] text-[12px]">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#16A34A] flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                ROUTE ENGINE DISPATCHING
+              </span>
+              <span className="text-[10px] font-mono text-[#7A8798]">STEP {loadingStep + 1} OF 5</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono text-[11px]">
+              {[
+                'Geocoding locations',
+                'Road geometry',
+                'HOS limits audit',
+                'Scheduling stops',
+                'Building daily logs',
+              ].map((stepText, idx) => {
+                const isDone = loadingStep > idx;
+                const isCurrent = loadingStep === idx;
+                return (
+                  <div
+                    key={idx}
+                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded border transition-colors ${
+                      isDone
+                        ? 'bg-[#ECFDF3] border-[#B7E4C7] text-[#15803D]'
+                        : isCurrent
+                        ? 'bg-[#EFF6FF] border-[#BFD5FF] text-[#2563EB] font-bold'
+                        : 'bg-white border-[#E2E8F0] text-[#7A8798]'
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isDone ? 'bg-[#16A34A]' : isCurrent ? 'bg-[#2563EB] animate-pulse' : 'bg-[#CBD5E1]'
+                      }`}
+                    />
+                    <span className="truncate">{stepText}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
-
 
       {/* Expandable Advanced Options Disclosure */}
       {showAdvanced && (
-        <div className="mt-4 pt-4 border-t border-[#EAECF0] space-y-4">
+        <div className="border-t border-[#D9E2EC] bg-[#F8FAFC] p-5 sm:p-6 space-y-4">
           {/* Dispatch Constraints */}
           <div>
-            <div className="text-[11px] font-semibold text-[#7A8490] tracking-wider uppercase mb-2.5">
-              Operating Durations &amp; Intervals
+            <div className="text-[10.5px] font-bold text-[#6366F1] tracking-[0.08em] uppercase mb-2.5 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#6366F1]" />
+              <span>Operating Durations &amp; Intervals</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Pickup Loading (hrs)
                 </label>
                 <input
@@ -411,12 +514,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       pickup_duration_hours: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Dropoff Unloading (hrs)
                 </label>
                 <input
@@ -430,12 +533,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       dropoff_duration_hours: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Fuel Interval (miles)
                 </label>
                 <input
@@ -449,12 +552,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       fuel_interval_miles: parseFloat(e.target.value) || 1000,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Fueling Duration (hrs)
                 </label>
                 <input
@@ -468,20 +571,21 @@ export const TripForm: React.FC<TripFormProps> = ({
                       fuel_duration_hours: parseFloat(e.target.value) || 0.5,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
             </div>
           </div>
 
           {/* Carrier Metadata for RODS */}
-          <div className="pt-3 border-t border-[#EAECF0]">
-            <div className="text-[11px] font-semibold text-[#7A8490] tracking-wider uppercase mb-2.5">
-              Carrier &amp; Equipment Details (for ELD / RODS Sheets)
+          <div className="pt-3 border-t border-[#D9E2EC]">
+            <div className="text-[10.5px] font-bold text-[#0891B2] tracking-[0.08em] uppercase mb-2.5 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#0891B2]" />
+              <span>Carrier &amp; Equipment Details (for ELD / RODS Sheets)</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Carrier Name
                 </label>
                 <input
@@ -490,12 +594,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, carrier_name: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Driver Name
                 </label>
                 <input
@@ -504,12 +608,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, driver_name: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Tractor / Unit #
                 </label>
                 <input
@@ -518,12 +622,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, vehicle_number: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-[#59636E] mb-1">
+                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
                   Shipping Doc / BOL #
                 </label>
                 <input
@@ -532,7 +636,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, shipping_doc: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#171A1F] bg-white border border-[#D9DDE3] rounded-[6px]"
+                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
             </div>

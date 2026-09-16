@@ -4,16 +4,150 @@
 @layer base {
   html, body {
     font-family: var(--font-sans);
-    background-color: var(--background);
-    color: var(--text-primary);
+    background-color: var(--rl-bg, #EEF3F8);
+    color: var(--rl-text-primary, #172033);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    height: 100%;
+    min-height: 100%;
   }
 
   code, kbd, samp, pre, .font-mono {
     font-family: var(--font-mono) !important;
     font-feature-settings: "tnum" 1;
   }
+}
+
+/* ==========================================================================
+   ROUTELEDGER — COMMERCIAL LOGISTICS TECHNICAL WORKSPACE & SURFACES
+   ========================================================================== */
+
+/* Main Technical Workspace with subtle cool blue-gray tone and light grid */
+.rl-workspace, .bg-technical-canvas {
+  min-height: 100%;
+  background-color: #EEF3F8;
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Operational Surfaces */
+.rl-panel {
+  background-color: #FFFFFF;
+  border: 1px solid #D9E2EC;
+  border-radius: 8px;
+}
+
+.rl-panel-elevated {
+  background-color: #FFFFFF;
+  border: 1px solid #C7D4E2;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+/* Section Accent Line (3px Professional Blue) */
+.rl-accent-line {
+  height: 3px;
+  width: 100%;
+  background: #2563EB;
+}
+
+/* Technical Metric Typography */
+.rl-metric-value {
+  font-family:
+    "Geist Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* Status LED Indicators */
+.rl-status-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  shrink: 0;
+}
+
+.rl-status-led.running {
+  background: #16A34A;
+  box-shadow: 0 0 5px rgba(22, 163, 74, 0.5);
+  animation: rl-pulse 1.8s ease-in-out infinite;
+}
+
+.rl-status-led.success {
+  background: #16A34A;
+}
+
+.rl-status-led.warning {
+  background: #D97706;
+}
+
+.rl-status-led.error {
+  background: #DC2626;
+}
+
+@keyframes rl-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+/* Primary Operational Button */
+.rl-primary-button {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.20);
+  border-radius: 8px;
+  font-weight: 600;
+  transition:
+    background-color var(--rl-fast, 150ms ease),
+    box-shadow var(--rl-fast, 150ms ease);
+}
+
+.rl-primary-button:hover:not(:disabled) {
+  background-color: #1D4ED8;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+}
+
+.rl-primary-button:active:not(:disabled) {
+  background-color: #1E40AF;
+}
+
+/* Crisp Light Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
 
 /* Dedicated Commercial Logistics Print Stylesheet */
@@ -25,7 +159,6 @@
     padding: 0 !important;
   }
 
-  /* Remove all interactive app chrome, sidebar, nav buttons */
   aside,
   header,
   nav,
@@ -36,11 +169,12 @@
     display: none !important;
   }
 
-  /* Make workspace occupy full print sheet */
   main, #app-workspace-container {
     padding: 0 !important;
     margin: 0 !important;
     max-width: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
   }
 
   .print-only {
@@ -61,20 +195,4 @@
     size: letter portrait;
     margin: 8mm;
   }
-}
-
-/* Operational high-density scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f8fafc;
-}
-::-webkit-scrollbar-thumb {
-  background: #d9dde3;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #a4acb5;
 }

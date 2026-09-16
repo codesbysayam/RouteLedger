@@ -80,7 +80,7 @@ export const PrintView: React.FC<PrintViewProps> = ({ plan }) => {
           <tbody>
             {plan.stops.map((s, idx) => (
               <tr key={`print-stop-${idx}`} className="border-b border-gray-300">
-                <td className="p-1.5 font-bold border-r border-black">{s.stop_type.replace(/_/g, ' ')}</td>
+                <td className="p-1.5 font-bold border-r border-black">{(s.stop_type || '').replace(/_/g, ' ')}</td>
                 <td className="p-1.5 border-r border-black">{s.name}</td>
                 <td className="p-1.5 border-r border-black font-mono">{new Date(s.arrival_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                 <td className="p-1.5 border-r border-black font-mono">{new Date(s.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
@@ -141,7 +141,7 @@ export const PrintView: React.FC<PrintViewProps> = ({ plan }) => {
               {log.remarks.map((rm, rIdx) => (
                 <tr key={`print-rm-${rIdx}`} className="border-b border-gray-300">
                   <td className="p-1 font-mono font-bold border-r border-black">{rm.time}</td>
-                  <td className="p-1 border-r border-black">{rm.status.replace(/_/g, ' ')}</td>
+                  <td className="p-1 border-r border-black">{(rm.status || '').replace(/_/g, ' ')}</td>
                   <td className="p-1 border-r border-black">{rm.location}</td>
                   <td className="p-1">{rm.description}</td>
                 </tr>

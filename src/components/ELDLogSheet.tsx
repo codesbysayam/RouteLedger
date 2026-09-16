@@ -179,7 +179,7 @@ export const ELDLogSheet: React.FC<ELDLogSheetProps> = ({ logs }) => {
                       <td className="py-2 px-3 font-mono font-medium text-slate-700">{rm.time}</td>
                       <td className="py-2 px-3">
                         <span className={`px-2 py-0.5 rounded text-[11px] ${badge}`}>
-                          {rm.status.replace(/_/g, ' ')}
+                          {(rm.status || '').replace(/_/g, ' ')}
                         </span>
                       </td>
                       <td className="py-2 px-3 text-slate-800 font-medium">{rm.location}</td>
