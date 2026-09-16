@@ -91,69 +91,69 @@ export const HOSRulesView: React.FC = () => {
   return (
     <div id="hos-rulebook-document" className="space-y-4 select-none">
       {/* Header */}
-      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] px-5 py-4 shadow-[0_4px_14px_rgba(15,23,42,0.05)] relative overflow-hidden">
+      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl px-5 py-4 shadow-xs relative overflow-hidden">
         {/* 3px Top Accent Line */}
         <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#2563EB]" />
 
         <div className="flex items-center gap-2 pt-1">
           <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-[#2563EB] tracking-[0.06em] uppercase">
-              STATUTORY REFERENCE HANDBOOK
+            <span className="text-xs font-bold text-[#2563EB] tracking-wide uppercase">
+              Statutory Reference Handbook
             </span>
             <div className="w-5 h-[2px] bg-[#2563EB] mt-0.5 rounded-full" />
           </div>
           <span className="text-[#D9E2EC] ml-1">|</span>
-          <span className="font-mono text-[11.5px] font-semibold text-[#526174]">FMCSA 49 CFR Part 395</span>
+          <span className="font-mono text-xs font-semibold text-[#526174]">FMCSA 49 CFR Part 395</span>
         </div>
-        <div className="text-[18px] font-bold text-[#172033] mt-1.5">
+        <div className="text-lg font-bold text-[#172033] mt-1.5">
           HOS Rulebook &amp; Enforcement Criteria
         </div>
-        <p className="text-[12.5px] text-[#526174] mt-1 leading-relaxed">
+        <p className="text-xs text-[#526174] mt-1 leading-relaxed">
           Property-carrying commercial motor vehicles operating under Federal Motor Carrier Safety Administration regulations.
         </p>
       </div>
 
       {/* Technical Reference Sections */}
-      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] divide-y divide-[#E2E8F0] shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl divide-y divide-[#E2E8F0] shadow-xs">
         {sections.map((sec, idx) => (
           <div key={idx} className="p-5 space-y-2.5 hover:bg-[#F8FAFC] transition-colors">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-[12px] text-[#2563EB] font-bold bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFD5FF]">
-                  0{idx + 1}
+                <span className="font-mono text-xs text-[#2563EB] font-bold bg-[#EFF6FF] px-2 py-0.5 rounded-md border border-[#BFD5FF]">
+                  {idx + 1}
                 </span>
-                <h3 className="text-[15px] font-bold text-[#172033]">
+                <h3 className="text-sm font-bold text-[#172033]">
                   {sec.title}
                 </h3>
               </div>
-              <span className="font-mono text-[11px] font-bold text-[#16A34A] bg-[#DCFCE7] border border-[#86EFAC] px-2.5 py-0.5 rounded-full">
+              <span className="font-mono text-xs font-bold text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-0.5 rounded-full">
                 {sec.statute}
               </span>
             </div>
 
-            <p className="text-[13px] font-semibold text-[#172033] leading-snug">
+            <p className="text-xs font-semibold text-[#172033] leading-snug">
               {sec.summary}
             </p>
 
-            <p className="text-[12.5px] text-[#526174] leading-relaxed">
+            <p className="text-xs text-[#526174] leading-relaxed">
               {sec.details}
             </p>
 
-            <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-[12px]">
-              <div className="bg-[#F8FAFC] border border-[#D9E2EC] rounded-[7px] p-3">
-                <span className="text-[10px] uppercase font-bold text-[#526174] block mb-0.5 tracking-wider">
+            <div className="pt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div className="bg-[#F8FAFC] border border-[#D9E2EC] rounded-lg p-3">
+                <span className="text-xs uppercase font-bold text-[#526174] block mb-0.5 tracking-wider">
                   Statutory Exception
                 </span>
-                <span className="text-[#526174] text-[11.5px] leading-relaxed">
+                <span className="text-[#526174] text-xs leading-relaxed">
                   {sec.exceptions}
                 </span>
               </div>
 
-              <div className="bg-[#EFF6FF] border border-[#BFD5FF] rounded-[7px] p-3 border-l-2 border-l-[#2563EB]">
-                <span className="text-[10px] uppercase font-bold text-[#2563EB] block mb-0.5 tracking-wider">
+              <div className="bg-[#F8FAFC] border border-[#D9E2EC] rounded-lg p-3">
+                <span className="text-xs uppercase font-bold text-[#2563EB] block mb-0.5 tracking-wider">
                   RouteLedger Engine Enforcement
                 </span>
-                <span className="text-[#172033] text-[11.5px] leading-relaxed font-medium">
+                <span className="text-[#172033] text-xs leading-relaxed font-medium">
                   {sec.enforcement}
                 </span>
               </div>

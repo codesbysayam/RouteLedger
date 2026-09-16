@@ -28,6 +28,7 @@ interface TripFormProps {
   onLoadExample?: () => void;
   currentOrigin?: string;
   currentDestination?: string;
+  initialCycleUsed?: number;
 }
 
 export const TripForm: React.FC<TripFormProps> = ({
@@ -36,12 +37,32 @@ export const TripForm: React.FC<TripFormProps> = ({
   onLoadExample,
   currentOrigin = 'Richmond, VA',
   currentDestination = 'Newark, NJ',
+  initialCycleUsed = 20.0,
 }) => {
   const [origin, setOrigin] = useState(currentOrigin);
   const [pickup, setPickup] = useState(currentOrigin);
   const [destination, setDestination] = useState(currentDestination);
-  const [currentCycleUsed, setCurrentCycleUsed] = useState<number>(0.0);
+  const [currentCycleUsed, setCurrentCycleUsed] = useState<number | string>(initialCycleUsed);
   const [departureTime, setDepartureTime] = useState('06:00');
+
+  useEffect(() => {
+    if (initialCycleUsed !== undefined && initialCycleUsed !== null) {
+      setCurrentCycleUsed(initialCycleUsed);
+    }
+  }, [initialCycleUsed]);
+
+  useEffect(() => {
+    if (currentOrigin) {
+      setOrigin(currentOrigin);
+      setPickup(currentOrigin);
+    }
+  }, [currentOrigin]);
+
+  useEffect(() => {
+    if (currentDestination) {
+      setDestination(currentDestination);
+    }
+  }, [currentDestination]);
 
   // Carrier & Equipment details
   const [carrierInfo, setCarrierInfo] = useState<CarrierInfo>({
@@ -155,7 +176,7 @@ export const TripForm: React.FC<TripFormProps> = ({
     <form
       id="trip-planner-form"
       onSubmit={handleSubmit}
-      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.06)]"
+      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.06)]"
     >
       {/* 3px Top Accent Line: #2563EB Solid */}
       <div className="h-[3px] w-full bg-[#2563EB] shrink-0" />
@@ -163,15 +184,16 @@ export const TripForm: React.FC<TripFormProps> = ({
       {/* Form Section Header: Light Surface with border #D9E2EC */}
       <div className="bg-[#F8FAFC] px-5 sm:px-6 pt-3.5 pb-3 border-b border-[#D9E2EC]">
         <div className="flex items-center justify-between mb-1">
-          <div className="text-[11px] font-bold text-[#2563EB] tracking-[0.08em] uppercase flex items-center gap-1.5">
+          <div className="text-xs font-bold text-[#2563EB] tracking-wide uppercase flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-            <span>TRIP PARAMETERS</span>
+            <span>Trip Parameters</span>
           </div>
-          <span className="text-[11px] font-mono font-semibold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-0.5 rounded-full border border-[#BFD5FF]">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-1 rounded-full border border-[#BFD5FF]">
+            <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
             FMCSA 70h / 8d Rule
           </span>
         </div>
-        <p className="text-[12.5px] text-[#526174]">
+        <p className="text-xs text-[#526174]">
           Commercial Route &amp; HOS Configuration
         </p>
       </div>
@@ -179,19 +201,19 @@ export const TripForm: React.FC<TripFormProps> = ({
       <div className="p-5 sm:p-6 pt-5 bg-[#FFFFFF]">
         {/* 3-Step Connected Journey Progression */}
         <div className="relative mb-5">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-4 relative z-10">
-            {/* 1. Origin (Cyan #0891B2) Node */}
-            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#0891B2] rounded-[8px] p-3.5 shadow-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+            {/* 1. Origin Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#2563EB] rounded-lg p-3.5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#ECFEFF] text-[#0891B2] flex items-center justify-center shrink-0 border border-[#A5F3FC]">
+                  <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFD5FF]">
                     <MapPin className="w-3.5 h-3.5" />
                   </div>
-                  <label className="text-[12px] font-bold text-[#0891B2]">
+                  <label className="text-xs font-bold text-[#172033]">
                     Origin Location
                   </label>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-[#0891B2] bg-[#ECFEFF] px-1.5 py-0.5 rounded border border-[#A5F3FC]">
+                <span className="text-xs font-mono font-bold text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded-md border border-[#BFD5FF]">
                   STEP 01
                 </span>
               </div>
@@ -207,7 +229,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onFocus={() => setActiveInput('origin')}
                   onBlur={() => setTimeout(() => setActiveInput(null), 250)}
                   placeholder="e.g. Richmond, VA"
-                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#0891B2]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                  className="w-full h-10 px-3 text-sm text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
                 />
                 {origin && (
                   <button
@@ -216,7 +238,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                       setOrigin('');
                       setOriginSuggestions([]);
                     }}
-                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                    className="absolute right-2.5 text-[#526174] hover:text-[#172033] p-1 rounded cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -224,7 +246,7 @@ export const TripForm: React.FC<TripFormProps> = ({
               </div>
 
               {activeInput === 'origin' && originSuggestions.length > 0 && (
-                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-[7px] shadow-xl py-1 overflow-hidden">
+                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-lg shadow-xl py-1 overflow-hidden">
                   {originSuggestions.map((item, idx) => (
                     <button
                       key={idx}
@@ -234,7 +256,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                         if (pickup === origin) setPickup(item.display_name);
                         setOriginSuggestions([]);
                       }}
-                      className="w-full text-left px-3.5 py-2 text-[12px] text-[#172033] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors truncate block cursor-pointer"
+                      className="w-full text-left px-3.5 py-2 text-xs text-[#172033] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors truncate block cursor-pointer"
                     >
                       {item.display_name}
                     </button>
@@ -243,18 +265,18 @@ export const TripForm: React.FC<TripFormProps> = ({
               )}
             </div>
 
-            {/* 2. Cargo Pickup (Blue #2563EB) Node */}
-            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#2563EB] rounded-[8px] p-3.5 shadow-xs">
+            {/* 2. Cargo Pickup Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#2563EB] rounded-lg p-3.5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFD5FF]">
                     <Building2 className="w-3.5 h-3.5" />
                   </div>
-                  <label className="text-[12px] font-bold text-[#2563EB]">
+                  <label className="text-xs font-bold text-[#172033]">
                     Cargo Pickup
                   </label>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded border border-[#BFD5FF]">
+                <span className="text-xs font-mono font-bold text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded-md border border-[#BFD5FF]">
                   STEP 02
                 </span>
               </div>
@@ -264,13 +286,13 @@ export const TripForm: React.FC<TripFormProps> = ({
                   value={pickup}
                   onChange={(e) => setPickup(e.target.value)}
                   placeholder="e.g. Richmond Distribution Center"
-                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                  className="w-full h-10 px-3 text-sm text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
                 />
                 {pickup && (
                   <button
                     type="button"
                     onClick={() => setPickup('')}
-                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                    className="absolute right-2.5 text-[#526174] hover:text-[#172033] p-1 rounded cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -278,18 +300,18 @@ export const TripForm: React.FC<TripFormProps> = ({
               </div>
             </div>
 
-            {/* 3. Destination (Indigo #6366F1) Node */}
-            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#6366F1] rounded-[8px] p-3.5 shadow-xs">
+            {/* 3. Destination Node */}
+            <div className="relative bg-[#FFFFFF] border border-[#D9E2EC] border-l-4 border-l-[#2563EB] rounded-lg p-3.5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#F3F1FF] text-[#6366F1] flex items-center justify-center shrink-0 border border-[#DDD6FE]">
+                  <div className="w-6 h-6 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 border border-[#BFD5FF]">
                     <MapPin className="w-3.5 h-3.5" />
                   </div>
-                  <label className="text-[12px] font-bold text-[#6366F1]">
+                  <label className="text-xs font-bold text-[#172033]">
                     Destination
                   </label>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-[#6366F1] bg-[#F3F1FF] px-1.5 py-0.5 rounded border border-[#DDD6FE]">
+                <span className="text-xs font-mono font-bold text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded-md border border-[#BFD5FF]">
                   STEP 03
                 </span>
               </div>
@@ -304,7 +326,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onFocus={() => setActiveInput('dest')}
                   onBlur={() => setTimeout(() => setActiveInput(null), 250)}
                   placeholder="e.g. Newark, NJ"
-                  className="w-full h-[38px] px-3 text-[13px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#6366F1]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
+                  className="w-full h-10 px-3 text-sm text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all placeholder:text-[#94A3B8]"
                 />
                 {destination && (
                   <button
@@ -313,7 +335,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                       setDestination('');
                       setDestSuggestions([]);
                     }}
-                    className="absolute right-2.5 text-[#7A8798] hover:text-[#172033] p-1 rounded cursor-pointer"
+                    className="absolute right-2.5 text-[#526174] hover:text-[#172033] p-1 rounded cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -321,7 +343,7 @@ export const TripForm: React.FC<TripFormProps> = ({
               </div>
 
               {activeInput === 'dest' && destSuggestions.length > 0 && (
-                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-[7px] shadow-xl py-1 overflow-hidden">
+                <div className="absolute top-[82px] left-0 right-0 z-30 bg-[#FFFFFF] border border-[#CBD5E1] rounded-lg shadow-xl py-1 overflow-hidden">
                   {destSuggestions.map((item, idx) => (
                     <button
                       key={idx}
@@ -330,7 +352,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                         setDestination(item.display_name);
                         setDestSuggestions([]);
                       }}
-                      className="w-full text-left px-3.5 py-2 text-[12px] text-[#172033] hover:bg-[#F3F1FF] hover:text-[#6366F1] transition-colors truncate block cursor-pointer"
+                      className="w-full text-left px-3.5 py-2 text-xs text-[#172033] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors truncate block cursor-pointer"
                     >
                       {item.display_name}
                     </button>
@@ -341,28 +363,31 @@ export const TripForm: React.FC<TripFormProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Operational Parameters (Departure + Cycle) & Action Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3.5 items-end mb-1">
-          {/* Departure Time (3 cols) */}
-          <div className="md:col-span-3">
-            <label className="block text-[12px] font-bold text-[#526174] mb-1">
+        {/* Row 2: Operational Parameters & Action Buttons - STRICT 3-COLUMN GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-1">
+          {/* Column 1: Departure Time */}
+          <div>
+            <label className="block text-xs font-bold text-[#526174] mb-1.5">
               Departure Time
             </label>
-            <input
-              type="time"
-              value={departureTime}
-              onChange={(e) => setDepartureTime(e.target.value)}
-              className="w-full h-[40px] px-3.5 text-[13px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
-            />
+            <div className="relative flex items-center">
+              <Clock className="w-4 h-4 text-[#94A3B8] absolute left-3 pointer-events-none" />
+              <input
+                type="time"
+                value={departureTime}
+                onChange={(e) => setDepartureTime(e.target.value)}
+                className="w-full h-10 pl-9 pr-3 text-sm font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:border-[#2563EB]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
+              />
+            </div>
           </div>
 
-          {/* Current Cycle Used: 5 cols */}
-          <div className="md:col-span-4 bg-[#F8FAFC] border border-[#D9E2EC] border-l-4 border-l-[#16A34A] rounded-[8px] p-2.5">
-            <div className="flex justify-between items-center mb-1">
-              <label className="text-[11px] font-bold text-[#16A34A] uppercase tracking-wider">
-                CURRENT CYCLE
+          {/* Column 2: Current Cycle Used */}
+          <div>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                Current Cycle
               </label>
-              <span className="font-mono text-[11px] text-[#526174]">
+              <span className="font-mono text-xs text-[#526174]">
                 <span className="font-semibold text-[#172033]">{cycleVal.toFixed(1)}h</span> used ·{' '}
                 <span className="font-bold text-[#16A34A]">{cycleRemaining.toFixed(1)}h left</span>
               </span>
@@ -375,10 +400,18 @@ export const TripForm: React.FC<TripFormProps> = ({
                   min="0"
                   max="70"
                   value={currentCycleUsed}
-                  onChange={(e) => setCurrentCycleUsed(parseFloat(e.target.value) || 0)}
-                  className="w-full h-[32px] px-3 text-[13px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] hover:border-[#16A34A]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setCurrentCycleUsed('');
+                    } else {
+                      const num = parseFloat(val);
+                      setCurrentCycleUsed(isNaN(num) ? 0 : num);
+                    }
+                  }}
+                  className="w-full h-10 px-3 text-sm font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:border-[#16A34A]/60 focus:bg-[#FFFFFF] focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
                 />
-                <span className="absolute right-3 text-[11px] font-mono text-[#7A8798] pointer-events-none">
+                <span className="absolute right-3 text-xs font-mono text-[#94A3B8] pointer-events-none">
                   / 70.0h max
                 </span>
               </div>
@@ -395,12 +428,13 @@ export const TripForm: React.FC<TripFormProps> = ({
             </div>
           </div>
 
-          {/* Advanced Disclosure Toggle */}
-          <div className="md:col-span-2 flex items-center h-[40px]">
+          {/* Column 3: Action Buttons (Parameters, Demo, Generate Route & Logs) */}
+          <div className="flex items-center gap-2.5 h-10">
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="inline-flex items-center justify-center gap-1.5 w-full h-full text-[12px] font-semibold text-[#526174] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] px-3 hover:bg-[#F8FAFC] hover:text-[#172033] cursor-pointer transition-colors shadow-xs"
+              className="h-10 px-3 text-xs font-semibold text-[#172033] bg-white border border-[#D9E2EC] rounded-lg hover:bg-[#F8FAFC] cursor-pointer transition-colors shadow-xs shrink-0 flex items-center gap-1.5"
+              title="Configure HOS & Equipment parameters"
             >
               <span>Parameters</span>
               {showAdvanced ? (
@@ -409,25 +443,30 @@ export const TripForm: React.FC<TripFormProps> = ({
                 <ChevronDown className="w-3.5 h-3.5 text-[#526174]" />
               )}
             </button>
-          </div>
 
-          {/* Operational Action Buttons: Demo + Generate Route & Logs */}
-          <div className="md:col-span-3 flex items-center gap-2 h-[40px]">
             {onLoadExample && (
               <button
                 type="button"
-                onClick={onLoadExample}
+                onClick={() => {
+                  setOrigin('Richmond, VA');
+                  setPickup('Richmond, VA');
+                  setDestination('Newark, NJ');
+                  setCurrentCycleUsed(20.0);
+                  setDepartureTime('06:00');
+                  onLoadExample();
+                }}
                 disabled={isLoading}
-                className="h-full px-3 text-[12px] font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#BFD5FF] rounded-[8px] hover:bg-[#DBEAFE] transition-colors cursor-pointer shrink-0"
+                className="h-10 px-3 text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] border border-[#BFD5FF] rounded-lg hover:bg-[#DBEAFE] transition-colors cursor-pointer shrink-0 flex items-center gap-1"
+                title="Load example commercial route"
               >
-                Demo
+                <span>Demo</span>
               </button>
             )}
 
             <button
               type="submit"
               disabled={isLoading || !origin.trim() || !destination.trim()}
-              className="flex-1 h-full px-4 text-[12.5px] font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-[8px] shadow-[0_4px_12px_rgba(37,99,235,0.20)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all duration-150"
+              className="flex-1 h-10 px-4 text-xs sm:text-sm font-bold text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-lg shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
             >
               {isLoading ? (
                 <>
@@ -494,13 +533,13 @@ export const TripForm: React.FC<TripFormProps> = ({
         <div className="border-t border-[#D9E2EC] bg-[#F8FAFC] p-5 sm:p-6 space-y-4">
           {/* Dispatch Constraints */}
           <div>
-            <div className="text-[10.5px] font-bold text-[#6366F1] tracking-[0.08em] uppercase mb-2.5 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#6366F1]" />
+            <div className="text-xs font-bold text-[#2563EB] tracking-wide uppercase mb-2.5 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
               <span>Operating Durations &amp; Intervals</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Pickup Loading (hrs)
                 </label>
                 <input
@@ -514,12 +553,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       pickup_duration_hours: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Dropoff Unloading (hrs)
                 </label>
                 <input
@@ -533,12 +572,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       dropoff_duration_hours: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Fuel Interval (miles)
                 </label>
                 <input
@@ -552,12 +591,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                       fuel_interval_miles: parseFloat(e.target.value) || 1000,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Fueling Duration (hrs)
                 </label>
                 <input
@@ -571,7 +610,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                       fuel_duration_hours: parseFloat(e.target.value) || 0.5,
                     })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
             </div>
@@ -579,13 +618,13 @@ export const TripForm: React.FC<TripFormProps> = ({
 
           {/* Carrier Metadata for RODS */}
           <div className="pt-3 border-t border-[#D9E2EC]">
-            <div className="text-[10.5px] font-bold text-[#0891B2] tracking-[0.08em] uppercase mb-2.5 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#0891B2]" />
+            <div className="text-xs font-bold text-[#2563EB] tracking-wide uppercase mb-2.5 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
               <span>Carrier &amp; Equipment Details (for ELD / RODS Sheets)</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Carrier Name
                 </label>
                 <input
@@ -594,12 +633,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, carrier_name: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Driver Name
                 </label>
                 <input
@@ -608,12 +647,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, driver_name: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Tractor / Unit #
                 </label>
                 <input
@@ -622,12 +661,12 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, vehicle_number: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs font-mono text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#526174] mb-1">
+                <label className="block text-xs font-semibold text-[#526174] mb-1">
                   Shipping Doc / BOL #
                 </label>
                 <input
@@ -636,7 +675,7 @@ export const TripForm: React.FC<TripFormProps> = ({
                   onChange={(e) =>
                     setCarrierInfo({ ...carrierInfo, shipping_doc: e.target.value })
                   }
-                  className="w-full h-[36px] px-2.5 text-[12px] text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[6px] focus:outline-none focus:border-[#2563EB]"
+                  className="w-full h-9 px-2.5 text-xs text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
             </div>

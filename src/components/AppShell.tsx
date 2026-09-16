@@ -150,9 +150,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                   type="button"
                   onClick={onLoadExample}
                   disabled={isLoading}
-                  className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-[12px] font-medium text-[#526174] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] hover:bg-[#F8FAFC] hover:text-[#172033] disabled:opacity-50 transition-colors cursor-pointer shadow-xs"
+                  className="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:bg-[#F8FAFC] disabled:opacity-50 transition-colors cursor-pointer shadow-xs"
                 >
-                  <RefreshCw className={`w-3 h-3 text-[#2563EB] ${isLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 text-[#2563EB] ${isLoading ? 'animate-spin' : ''}`} />
                   <span>Demo</span>
                 </button>
               )}
@@ -161,20 +161,20 @@ export const AppShell: React.FC<AppShellProps> = ({
                 <button
                   type="button"
                   onClick={onPrint}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[12px] font-medium text-[#526174] bg-[#FFFFFF] border border-[#D9E2EC] rounded-[7px] hover:bg-[#F8FAFC] hover:text-[#172033] transition-colors cursor-pointer shadow-xs"
+                  className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-[#172033] bg-[#FFFFFF] border border-[#D9E2EC] rounded-lg hover:bg-[#F8FAFC] transition-colors cursor-pointer shadow-xs"
                 >
-                  <Printer className="w-3 h-3 text-[#7A8798]" />
+                  <Printer className="w-3.5 h-3.5 text-[#526174]" />
                   <span className="hidden sm:inline">Print</span>
                 </button>
               )}
 
-              {/* Status LED with soft green Operational pill */}
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#15803D] bg-[#ECFDF3] border border-[#B7E4C7] px-2.5 py-1 rounded-full shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
-                <span className="tracking-wider">OPERATIONAL</span>
+              {/* Status Pill Badge (Unified Standard) */}
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-1 rounded-full shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                <span>Operational</span>
               </div>
 
-              <div className="font-mono text-[11.5px] text-[#7A8798] hidden lg:block border-l border-[#D9E2EC] pl-3">
+              <div className="font-mono text-xs text-[#526174] hidden lg:block border-l border-[#D9E2EC] pl-3">
                 {currentTime}
               </div>
             </div>

@@ -1,5 +1,6 @@
 /**
  * RouteLedger - Frontend API Client
+ * Supports backend endpoints with automatic client-side fallback for static deployments (e.g. Vercel)
  */
 import {
   TripPlan,
@@ -8,6 +9,20 @@ import {
   CarrierInfo,
   ApiResponse,
 } from '../types.ts';
+import { geocodeLocation } from '../../server/geocodingService.ts';
+import { planTripClientSide } from './localPlanner.ts';
+
+async function safeParseJson<T>(res: Response): Promise<ApiResponse<T> | null> {
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.toLowerCase().includes('application/json')) {
+    return null;
+  }
+  try {
+    return (await res.json()) as ApiResponse<T>;
+  } catch {
+    return null;
+  }
+}
 
 export async function searchLocations(query: string, limit = 5): Promise<LocationPoint[]> {
   if (!query.trim()) return [];
@@ -17,14 +32,23 @@ export async function searchLocations(query: string, limit = 5): Promise<Locatio
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, limit }),
     });
-    const json = (await res.json()) as ApiResponse<LocationPoint[]>;
-    if (json.success && json.data) {
-      return json.data;
+
+    if (res.ok) {
+      const json = await safeParseJson<LocationPoint[]>(res);
+      if (json?.success && json.data) {
+        return json.data;
+      }
     }
-  } catch (err) {
-    console.error('Failed to search locations:', err);
+  } catch {
+    // API endpoint unreachable, fall back to client-side geocoder
   }
-  return [];
+
+  try {
+    return await geocodeLocation(query, limit);
+  } catch (err) {
+    console.error('Failed to search locations client-side:', err);
+    return [];
+  }
 }
 
 export interface PlanTripPayload {
@@ -38,34 +62,50 @@ export interface PlanTripPayload {
 }
 
 export async function planTrip(payload: PlanTripPayload): Promise<TripPlan> {
-  const res = await fetch('/api/trips/plan', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch('/api/trips/plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
 
-  const json = (await res.json()) as ApiResponse<TripPlan>;
-  if (!json.success || !json.data) {
-    throw new Error(json.error?.message || 'Failed to plan trip.');
+    if (res.ok) {
+      const json = await safeParseJson<TripPlan>(res);
+      if (json?.success && json.data) {
+        return json.data;
+      }
+    }
+  } catch {
+    // Backend API is offline or not hosted (e.g. Vercel static deployment)
   }
-  return json.data;
+
+  // Seamless client-side planning fallback
+  return await planTripClientSide(payload);
 }
 
 export async function getTripById(id: string): Promise<TripPlan> {
-  const res = await fetch(`/api/trips/${id}`);
-  const json = (await res.json()) as ApiResponse<TripPlan>;
-  if (!json.success || !json.data) {
-    throw new Error(json.error?.message || 'Trip not found.');
+  try {
+    const res = await fetch(`/api/trips/${id}`);
+    if (res.ok) {
+      const json = await safeParseJson<TripPlan>(res);
+      if (json?.success && json.data) {
+        return json.data;
+      }
+    }
+  } catch {
+    // Fallback
   }
-  return json.data;
+  throw new Error('Trip not found or service unavailable.');
 }
 
 export async function checkApiHealth(): Promise<boolean> {
   try {
     const res = await fetch('/api/health');
-    const json = await res.json();
+    if (!res.ok) return false;
+    const json = await safeParseJson<{ status: string }>(res);
     return json?.success === true;
   } catch {
     return false;
   }
 }
+

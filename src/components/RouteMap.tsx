@@ -326,7 +326,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   const driveTimeStr = totalDriveHours ? `${hours}h ${minutes}m driving` : '';
 
   return (
-    <div id="route-map-panel" className="relative flex flex-col h-[520px] min-h-[420px] w-full bg-white border border-[#D9E2EC] rounded-[10px] overflow-hidden shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
+    <div id="route-map-panel" className="relative flex flex-col h-[520px] min-h-[420px] w-full bg-white border border-[#D9E2EC] rounded-xl overflow-hidden shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
       {/* 3px Top Accent Line: Professional Blue */}
       <div className="h-[3px] w-full bg-[#2563EB] shrink-0" />
 
@@ -336,20 +336,20 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-              <span className="text-[11px] font-bold text-[#2563EB] tracking-[0.08em] uppercase">
-                ROUTE CORRIDOR &amp; STOPS
+              <span className="text-xs font-bold text-[#2563EB] tracking-wide uppercase">
+                Route Corridor &amp; Stops
               </span>
             </div>
             {totalMiles !== undefined && totalMiles > 0 && (
               <>
                 <span className="text-[#CBD5E1]">|</span>
-                <span className="font-mono text-[12.5px] font-bold text-[#172033]">
+                <span className="font-mono text-xs font-bold text-[#172033]">
                   {totalMiles.toLocaleString(undefined, { maximumFractionDigits: 1 })} mi
                 </span>
                 {driveTimeStr && (
                   <>
                     <span className="text-[#CBD5E1]">·</span>
-                    <span className="font-mono text-[12px] font-semibold text-[#526174]">
+                    <span className="font-mono text-xs font-semibold text-[#526174]">
                       {driveTimeStr}
                     </span>
                   </>
@@ -358,10 +358,10 @@ export const RouteMap: React.FC<RouteMapProps> = ({
             )}
           </div>
           {originName && destinationName && (
-            <div className="text-[13px] font-medium mt-0.5 flex items-center gap-2">
-              <span className="text-[#0891B2] font-semibold">{originName}</span>
+            <div className="text-xs font-medium mt-0.5 flex items-center gap-2">
+              <span className="text-[#172033] font-semibold">{originName}</span>
               <span className="text-[#2563EB] font-bold">→</span>
-              <span className="text-[#6366F1] font-semibold">{destinationName}</span>
+              <span className="text-[#2563EB] font-semibold">{destinationName}</span>
             </div>
           )}
         </div>
@@ -371,7 +371,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           <button
             type="button"
             onClick={() => setActiveLayer('standard')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
               activeLayer === 'standard'
                 ? 'bg-[#2563EB] text-white shadow-xs'
                 : 'text-[#526174] hover:text-[#172033] hover:bg-[#F1F5F9]'
@@ -384,7 +384,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           <button
             type="button"
             onClick={() => setActiveLayer('satellite')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
               activeLayer === 'satellite'
                 ? 'bg-[#2563EB] text-white shadow-xs'
                 : 'text-[#526174] hover:text-[#172033] hover:bg-[#F1F5F9]'
@@ -397,7 +397,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           <button
             type="button"
             onClick={() => setActiveLayer('terrain')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
               activeLayer === 'terrain'
                 ? 'bg-[#2563EB] text-white shadow-xs'
                 : 'text-[#526174] hover:text-[#172033] hover:bg-[#F1F5F9]'
@@ -419,16 +419,16 @@ export const RouteMap: React.FC<RouteMapProps> = ({
         />
 
         {/* Small technical badge in top-right: OSRM ROUTE ENGINE */}
-        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-[6px] px-2.5 py-1 shadow-[0_4px_14px_rgba(15,23,42,0.10)] flex items-center gap-1.5 text-[11px] font-mono text-[#172033] select-none">
+        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-lg px-2.5 py-1 shadow-[0_4px_14px_rgba(15,23,42,0.10)] flex items-center gap-1.5 text-xs font-mono text-[#172033] select-none">
           <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
           <span className="font-semibold tracking-wider text-[#172033]">OSRM ROUTE ENGINE</span>
         </div>
 
         {/* Compact floating map control in top-left */}
         {totalMiles !== undefined && totalMiles > 0 && (
-          <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 shadow-[0_4px_14px_rgba(15,23,42,0.10)] flex items-center gap-2 text-[11px] font-mono text-[#172033] select-none">
+          <div className="absolute top-3 left-3 z-[1000] bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-lg px-3 py-1.5 shadow-[0_4px_14px_rgba(15,23,42,0.10)] flex items-center gap-2 text-xs font-mono text-[#172033] select-none">
             <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-            <span className="font-bold uppercase tracking-wider text-[#2563EB]">CORRIDOR</span>
+            <span className="font-bold uppercase tracking-wider text-[#2563EB]">Corridor</span>
             <span className="text-[#CBD5E1]">·</span>
             <span className="font-bold text-[#172033]">{totalMiles.toFixed(1)} mi</span>
             {driveTimeStr && (
@@ -438,14 +438,14 @@ export const RouteMap: React.FC<RouteMapProps> = ({
               </>
             )}
             <span className="text-[#CBD5E1]">·</span>
-            <span className="text-[#7A8798]">{fuelCount} stops</span>
+            <span className="text-[#526174]">{fuelCount} stops</span>
           </div>
         )}
 
         {/* Semantic Color Legend pinned at bottom-left */}
-        <div className="absolute bottom-3 left-3 z-[1000] bg-white/96 backdrop-blur-md border border-[#CBD5E1] rounded-[6px] px-3 py-1.5 shadow-[0_4px_14px_rgba(15,23,42,0.10)] text-[11px] font-semibold text-[#526174] flex items-center gap-3 select-none">
+        <div className="absolute bottom-3 left-3 z-[1000] bg-white/96 backdrop-blur-md border border-[#CBD5E1] rounded-lg px-3 py-1.5 shadow-[0_4px_14px_rgba(15,23,42,0.10)] text-xs font-semibold text-[#526174] flex items-center gap-3 select-none">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0891B2] inline-block border border-white shadow-xs" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB] inline-block border border-white shadow-xs" />
             <span className="text-[#172033]">Origin</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -453,7 +453,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
             <span className="text-[#172033]">Pickup</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0F9F8F] inline-block border border-white shadow-xs" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] inline-block border border-white shadow-xs" />
             <span className="text-[#172033]">Break</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -461,7 +461,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
             <span className="text-[#172033]">Fuel</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#6366F1] inline-block border border-white shadow-xs" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2563EB] inline-block border border-white shadow-xs" />
             <span className="text-[#172033]">Destination</span>
           </div>
         </div>

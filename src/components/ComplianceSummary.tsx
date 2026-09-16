@@ -75,7 +75,7 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
   return (
     <div
       id="hos-compliance-table-container"
-      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.05)] relative"
+      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl overflow-hidden select-none shadow-xs relative"
     >
       {/* 3px Top Accent Line */}
       <div
@@ -84,7 +84,7 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
         }`}
       />
 
-      {/* Header: COMPLIANCE AUDIT · FMCSA 49 CFR Part 395 */}
+      {/* Header: Compliance Audit · FMCSA 49 CFR Part 395 */}
       <div className="px-5 py-3.5 border-b border-[#D9E2EC] flex items-center justify-between bg-[#F8FAFC]">
         <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-1.5">
@@ -94,29 +94,29 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
               }`}
             />
             <span
-              className={`text-[11px] font-bold tracking-[0.08em] uppercase ${
-                isCompliant ? 'text-[#15803D]' : 'text-[#DC2626]'
+              className={`text-xs font-bold tracking-wide uppercase ${
+                isCompliant ? 'text-[#16A34A]' : 'text-[#DC2626]'
               }`}
             >
-              COMPLIANCE AUDIT
+              Compliance Audit
             </span>
           </div>
           <span className="text-[#D9E2EC]">|</span>
-          <span className="text-[11.5px] text-[#526174] font-mono font-medium">
+          <span className="text-xs text-[#526174] font-mono font-medium">
             FMCSA 49 CFR Part 395
           </span>
         </div>
 
         <div>
           {isCompliant ? (
-            <div className="inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0] px-3 py-1 rounded-[6px] shadow-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
-              <span>FMCSA COMPLIANT</span>
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1 rounded-full shadow-xs">
+              <ShieldCheck className="w-4 h-4 text-[#16A34A]" />
+              <span>FMCSA Compliant</span>
             </div>
           ) : (
-            <div className="inline-flex items-center gap-1.5 text-[11.5px] font-bold text-[#DC2626] bg-[#FFF1F2] border border-[#FECDD3] px-3 py-1 rounded-[6px] shadow-xs">
-              <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626]" />
-              <span>VIOLATION DETECTED ({violations.length})</span>
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#DC2626] bg-[#FEF2F2] border border-[#FECACA] px-3 py-1 rounded-full shadow-xs">
+              <AlertTriangle className="w-4 h-4 text-[#DC2626]" />
+              <span>Violation Detected ({violations.length})</span>
             </div>
           )}
         </div>
@@ -124,9 +124,9 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
 
       {/* Violation Details if Any */}
       {!isCompliant && violations.length > 0 && (
-        <div className="px-5 py-3 bg-[#FFF1F2] border-b border-[#FECDD3] text-[12px] text-[#991B1B] space-y-1.5">
+        <div className="px-5 py-3 bg-[#FEF2F2] border-b border-[#FECACA] text-xs text-[#991B1B] space-y-1.5">
           {violations.map((v: any, idx) => (
-            <div key={idx} className="flex items-start gap-2 font-mono text-[12px]">
+            <div key={idx} className="flex items-start gap-2 font-mono text-xs">
               <span className="font-bold text-[#DC2626]">•</span>
               <span>
                 {typeof v === 'string'
@@ -140,15 +140,15 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
 
       {/* Tabular Audit Rows with alternating light surfaces */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-[13px] border-collapse">
+        <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[#D9E2EC] text-[10.5px] font-bold text-[#526174] uppercase tracking-wider bg-[#F8FAFC]">
-              <th className="py-2.5 px-5 font-bold">RULE</th>
-              <th className="py-2.5 px-4 font-bold">STATUTE</th>
-              <th className="py-2.5 px-4 font-bold">STATUS</th>
-              <th className="py-2.5 px-4 font-bold">REMAINING</th>
-              <th className="py-2.5 px-4 font-bold">LIMIT</th>
-              <th className="py-2.5 px-5 font-bold text-right">OBSERVED</th>
+            <tr className="border-b border-[#D9E2EC] text-xs font-bold text-[#526174] uppercase tracking-wider bg-[#F8FAFC]">
+              <th className="py-2.5 px-5 font-bold">Rule</th>
+              <th className="py-2.5 px-4 font-bold">Statute</th>
+              <th className="py-2.5 px-4 font-bold">Status</th>
+              <th className="py-2.5 px-4 font-bold">Remaining</th>
+              <th className="py-2.5 px-4 font-bold">Limit</th>
+              <th className="py-2.5 px-5 font-bold text-right">Observed</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E2E8F0] text-[#172033]">
@@ -165,15 +165,15 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
                   <td className="py-3 px-5 font-semibold text-[#172033]">
                     {row.rule}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-[#526174]">
+                  <td className="py-3 px-4 font-mono text-xs text-[#526174]">
                     {row.statute}
                   </td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold px-2 py-0.5 rounded-[4px] ${
+                      className={`inline-flex items-center gap-1.5 font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                         isPass
-                          ? 'text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0]'
-                          : 'text-[#DC2626] bg-[#FFF1F2] border border-[#FECDD3]'
+                          ? 'text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0]'
+                          : 'text-[#DC2626] bg-[#FEF2F2] border border-[#FECACA]'
                       }`}
                     >
                       <span
@@ -181,16 +181,16 @@ export const ComplianceSummary: React.FC<ComplianceSummaryProps> = ({
                           isPass ? 'bg-[#16A34A]' : 'bg-[#DC2626]'
                         }`}
                       />
-                      {row.status}
+                      {isPass ? 'Pass' : 'Violation'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 font-mono text-[12px] font-medium text-[#172033]">
+                  <td className="py-3 px-4 font-mono text-xs font-medium text-[#172033]">
                     {row.remaining}
                   </td>
-                  <td className="py-3 px-4 font-mono text-[12px] text-[#526174]">
+                  <td className="py-3 px-4 font-mono text-xs text-[#526174]">
                     {row.limit}
                   </td>
-                  <td className="py-3 px-5 font-mono text-[12px] font-bold text-[#172033] text-right">
+                  <td className="py-3 px-5 font-mono text-xs font-bold text-[#172033] text-right">
                     {row.observed}
                   </td>
                 </tr>

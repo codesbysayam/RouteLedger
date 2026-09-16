@@ -43,7 +43,7 @@ export const RouteInstructions: React.FC<RouteInstructionsProps> = ({
   return (
     <div
       id="route-instructions-container"
-      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden select-none shadow-[0_4px_14px_rgba(15,23,42,0.05)] relative"
+      className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl overflow-hidden select-none shadow-xs relative"
     >
       {/* 3px Top Accent Line */}
       <div className="h-[3px] w-full bg-[#2563EB] shrink-0" />
@@ -54,23 +54,23 @@ export const RouteInstructions: React.FC<RouteInstructionsProps> = ({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
-              <span className="text-[11px] font-bold text-[#2563EB] tracking-[0.08em] uppercase">
-                ROUTE INSTRUCTIONS &amp; ROAD MANEUVERS
+              <span className="text-xs font-bold text-[#2563EB] tracking-wide uppercase">
+                Route Instructions &amp; Road Maneuvers
               </span>
             </div>
             <span className="text-[#D9E2EC] ml-1">|</span>
-            <span className="text-[11px] font-mono font-semibold text-[#2563EB] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFD5FF]">
+            <span className="text-xs font-mono font-semibold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-0.5 rounded-full border border-[#BFD5FF]">
               {steps.length} maneuvers
             </span>
           </div>
-          <div className="text-[13.5px] font-medium mt-1 flex items-center gap-2">
+          <div className="text-sm font-medium mt-1 flex items-center gap-2">
             <span className="text-[#2563EB] font-bold">{originName}</span>
             <span className="text-[#526174] font-bold">→</span>
             <span className="text-[#172033] font-semibold">{destName}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[13px] text-[#172033]">
+        <div className="flex items-center gap-2 font-mono text-xs text-[#172033]">
           {totalMiles !== undefined && totalMiles > 0 && (
             <span className="font-bold text-[#2563EB]">{totalMiles.toFixed(1)} mi</span>
           )}
@@ -86,39 +86,30 @@ export const RouteInstructions: React.FC<RouteInstructionsProps> = ({
       {/* Maneuvers List as Operational Event Rows */}
       <div className="divide-y divide-[#E2E8F0]">
         {steps.map((step, idx) => {
-          const isFirst = idx === 0;
-          const isLast = idx === steps.length - 1;
           const isOdd = idx % 2 === 1;
-
-          // Determine left accent indicator color
-          const leftAccentColor = isFirst
-            ? 'border-l-[3px] border-l-[#2563EB]'
-            : isLast
-            ? 'border-l-[3px] border-l-[#16A34A]'
-            : 'border-l-[3px] border-l-transparent hover:border-l-[#2563EB]';
 
           return (
             <div
               key={`step-${idx}`}
-              className={`px-4 sm:px-5 py-2.5 min-h-[40px] flex items-center justify-between gap-4 text-[13px] transition-colors duration-150 ${leftAccentColor} ${
+              className={`px-4 sm:px-5 py-2.5 min-h-[40px] flex items-center justify-between gap-4 text-xs transition-colors duration-150 ${
                 isOdd ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]'
               } hover:bg-[#F1F5F9]`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="font-mono text-[11px] font-bold text-[#2563EB] w-6 h-6 rounded bg-[#EFF6FF] border border-[#BFD5FF] flex items-center justify-center shrink-0">
+                <span className="font-mono text-xs font-bold text-[#2563EB] w-6 h-6 rounded-md bg-[#EFF6FF] border border-[#BFD5FF] flex items-center justify-center shrink-0">
                   {String(idx + 1).padStart(2, '0')}
                 </span>
 
-                <div className="w-6 h-6 rounded-[5px] bg-[#EFF6FF] border border-[#BFD5FF] flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-md bg-[#EFF6FF] border border-[#BFD5FF] flex items-center justify-center shrink-0">
                   {getStepIcon(step.type, step.modifier)}
                 </div>
 
                 <div className="min-w-0">
-                  <div className="font-semibold text-[#172033] truncate text-[13px]">
+                  <div className="font-semibold text-[#172033] truncate text-xs">
                     {step.instruction}
                   </div>
                   {step.name && step.name !== 'highway' && (
-                    <div className="text-[11.5px] text-[#526174] truncate font-mono">
+                    <div className="text-xs text-[#526174] truncate font-mono">
                       {step.name}
                     </div>
                   )}
@@ -127,11 +118,11 @@ export const RouteInstructions: React.FC<RouteInstructionsProps> = ({
 
               <div className="flex items-center gap-2.5 shrink-0 text-right">
                 {step.duration_minutes > 0 && (
-                  <span className="font-mono text-[10.5px] font-semibold text-[#6366F1] bg-[#F3F1FF] px-1.5 py-0.5 rounded border border-[#DDD6FE]">
+                  <span className="font-mono text-xs font-semibold text-[#2563EB] bg-[#EFF6FF] px-2 py-0.5 rounded-full border border-[#BFD5FF]">
                     {Math.round(step.duration_minutes)} min
                   </span>
                 )}
-                <div className="font-mono text-[12px] font-bold text-[#16A34A] min-w-[54px] text-right">
+                <div className="font-mono text-xs font-bold text-[#16A34A] min-w-[54px] text-right">
                   {step.distance_miles < 0.1
                     ? `${Math.round(step.distance_miles * 5280)} ft`
                     : `${step.distance_miles.toFixed(1)} mi`}

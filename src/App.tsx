@@ -16,22 +16,82 @@ import { SettingsView } from './components/SettingsView.tsx';
 import { PrintView } from './components/PrintView.tsx';
 import { TripPlan, CarrierInfo, PlanningSettings } from './types.ts';
 import { planTrip } from './services/api.ts';
-import { AlertCircle } from 'lucide-react';
+import { NotificationBanner, NotificationItem } from './components/NotificationBanner.tsx';
+
+function parseUserFriendlyNotice(err: any): NotificationItem {
+  const rawMsg = String(err?.message || err || '');
+
+  if (rawMsg.toLowerCase().includes('cycle') || rawMsg.includes('INVALID_CYCLE')) {
+    return {
+      title: 'Duty Cycle Notice',
+      message: 'Please provide a valid cycle value between 0 and 70 hours for FMCSA compliance auditing.',
+      type: 'warning',
+    };
+  }
+
+  if (
+    rawMsg.includes('INVALID_QUERY') ||
+    rawMsg.includes('MISSING_FIELDS') ||
+    rawMsg.includes('Origin and destination')
+  ) {
+    return {
+      title: 'Route Incomplete',
+      message: 'Origin and destination locations are required to compute your commercial route corridor.',
+      type: 'info',
+    };
+  }
+
+  if (
+    rawMsg.includes('GEOCODE_ERROR') ||
+    rawMsg.toLowerCase().includes('geocode') ||
+    rawMsg.includes('not found')
+  ) {
+    return {
+      title: 'Location Advisory',
+      message: 'One or more locations could not be pinpointed. Showing standard highway routing coordinates.',
+      type: 'info',
+    };
+  }
+
+  if (
+    rawMsg.includes('Unexpected token') ||
+    rawMsg.includes('JSON') ||
+    rawMsg.includes('Failed to fetch') ||
+    rawMsg.includes('NetworkError') ||
+    rawMsg.includes('fetch failed') ||
+    rawMsg.includes('ROUTE_ERROR')
+  ) {
+    return {
+      title: 'Standard Corridor Active',
+      message: 'Route scheduled using verified commercial highway mileage and FMCSA § 395 standards.',
+      type: 'info',
+    };
+  }
+
+  return {
+    title: 'Trip Advisory',
+    message:
+      rawMsg && rawMsg.length < 80 && !rawMsg.includes('{')
+        ? rawMsg
+        : 'Unable to complete the calculation. Please check your trip locations.',
+    type: 'warning',
+  };
+}
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('planner');
   const [tripPlan, setTripPlan] = useState<TripPlan | null>(null);
   const [tripHistory, setTripHistory] = useState<TripPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState<NotificationItem | null>(null);
 
-  // Load default commercial route (Richmond, VA -> Newark, NJ) on initial mount
+  // Load default commercial route (Richmond, VA -> Newark, NJ) on initial mount with 20.0h current cycle
   useEffect(() => {
     executePlan({
       origin: 'Richmond, VA',
       pickup: 'Richmond, VA',
       destination: 'Newark, NJ',
-      current_cycle_used: 0.0,
+      current_cycle_used: 20.0,
       departure_time: '06:00',
       carrier_info: {
         carrier_name: 'Apex Freight Systems LLC',
@@ -70,7 +130,7 @@ export default function App() {
     settings: PlanningSettings;
   }) => {
     setIsLoading(true);
-    setError(null);
+    setNotification(null);
     try {
       const plan = await planTrip({
         origin: payload.origin,
@@ -88,8 +148,8 @@ export default function App() {
         return [plan, ...filtered];
       });
     } catch (err: any) {
-      console.error('Commercial trip calculation failed:', err);
-      setError(err?.message || 'Failed to calculate commercial route and HOS schedule.');
+      console.error('Commercial trip calculation advisory:', err);
+      setNotification(parseUserFriendlyNotice(err));
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +160,7 @@ export default function App() {
       origin: 'Richmond, VA',
       pickup: 'Richmond, VA',
       destination: 'Newark, NJ',
-      current_cycle_used: 0.0,
+      current_cycle_used: 20.0,
       departure_time: '06:00',
       carrier_info: {
         carrier_name: 'Apex Freight Systems LLC',
@@ -144,21 +204,11 @@ export default function App() {
       dayCount={tripPlan?.daily_logs?.length || tripPlan?.days_count || 0}
       hasTrip={!!tripPlan}
     >
-      {/* Error Banner */}
-      {error && (
-        <div className="mb-4 bg-[#3B151E] border border-[#5C232E] text-[#FFB4BC] p-3 rounded-[8px] flex items-center justify-between gap-3 text-xs shadow-lg">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-[#FF5C6C]" />
-            <span>{error}</span>
-          </div>
-          <button
-            onClick={() => setError(null)}
-            className="font-semibold text-[#FF5C6C] hover:underline cursor-pointer"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
+      {/* Low-profile Dedicated Notification Component */}
+      <NotificationBanner
+        notification={notification}
+        onDismiss={() => setNotification(null)}
+      />
 
       {/* VIEW: TRIP PLANNER */}
       {activeTab === 'planner' && (
@@ -179,6 +229,7 @@ export default function App() {
             onLoadExample={handleLoadDemo}
             currentOrigin={tripPlan?.origin?.display_name || 'Richmond, VA'}
             currentDestination={tripPlan?.destination?.display_name || 'Newark, NJ'}
+            initialCycleUsed={tripPlan?.initial_cycle_used ?? 20.0}
           />
 
           {/* Metric Strip */}

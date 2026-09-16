@@ -23,47 +23,47 @@ export const TripHistoryView: React.FC<TripHistoryViewProps> = ({ trips, onSelec
   return (
     <div className="space-y-4 select-none">
       {/* Header */}
-      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] px-5 py-4 flex items-center justify-between shadow-[0_4px_14px_rgba(15,23,42,0.05)] relative overflow-hidden">
+      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl px-5 py-4 flex items-center justify-between shadow-xs relative overflow-hidden">
         {/* Top Accent Line */}
         <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#2563EB]" />
 
         <div className="pt-0.5">
           <div className="flex items-center gap-2">
             <div className="flex flex-col">
-              <span className="text-[11px] font-bold text-[#2563EB] tracking-[0.06em] uppercase">
-                TRIP HISTORY &amp; RECORDS
+              <span className="text-xs font-bold text-[#2563EB] tracking-wide uppercase">
+                Trip History &amp; Records
               </span>
               <div className="w-5 h-[2px] bg-[#2563EB] mt-0.5 rounded-full" />
             </div>
             <span className="text-[#D9E2EC] ml-1">|</span>
-            <span className="font-mono text-[11.5px] font-semibold text-[#526174]">
+            <span className="font-mono text-xs font-semibold text-[#526174]">
               {trips.length} saved records
             </span>
           </div>
-          <div className="text-[16px] font-bold text-[#172033] mt-1">
+          <div className="text-base font-bold text-[#172033] mt-1">
             Dispatch History Archive
           </div>
         </div>
-        <span className="font-mono text-[11px] font-bold text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0] px-3.5 py-1 rounded-full shadow-xs">
-          ACTIVE ARCHIVE
+        <span className="font-mono text-xs font-bold text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0] px-3.5 py-1 rounded-full shadow-xs">
+          Active Archive
         </span>
       </div>
 
       {/* Professional Table */}
-      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-[10px] overflow-hidden shadow-[0_4px_14px_rgba(15,23,42,0.05)]">
+      <div className="bg-[#FFFFFF] border border-[#D9E2EC] rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-[13px] border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAFC] border-b border-[#D9E2EC] text-[10.5px] font-bold text-[#526174] uppercase tracking-wider">
-                <th className="py-2.5 px-4 font-bold">TRIP ID</th>
-                <th className="py-2.5 px-4 font-bold">ORIGIN</th>
-                <th className="py-2.5 px-4 font-bold">DESTINATION</th>
-                <th className="py-2.5 px-4 font-bold">DISTANCE</th>
-                <th className="py-2.5 px-4 font-bold">DURATION</th>
-                <th className="py-2.5 px-4 font-bold">DAYS</th>
-                <th className="py-2.5 px-4 font-bold">COMPLIANCE</th>
-                <th className="py-2.5 px-4 font-bold">CREATED</th>
-                <th className="py-2.5 px-4 font-bold text-right">ACTION</th>
+              <tr className="bg-[#F8FAFC] border-b border-[#D9E2EC] text-xs font-bold text-[#526174] uppercase tracking-wider">
+                <th className="py-2.5 px-4 font-bold">Trip ID</th>
+                <th className="py-2.5 px-4 font-bold">Origin</th>
+                <th className="py-2.5 px-4 font-bold">Destination</th>
+                <th className="py-2.5 px-4 font-bold">Distance</th>
+                <th className="py-2.5 px-4 font-bold">Duration</th>
+                <th className="py-2.5 px-4 font-bold">Days</th>
+                <th className="py-2.5 px-4 font-bold">Compliance</th>
+                <th className="py-2.5 px-4 font-bold">Created</th>
+                <th className="py-2.5 px-4 font-bold text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0] text-[#172033]">
@@ -85,7 +85,7 @@ export const TripHistoryView: React.FC<TripHistoryViewProps> = ({ trips, onSelec
                     onClick={() => onSelectTrip(t)}
                     className="hover:bg-[#EFF6FF]/60 transition-colors cursor-pointer group"
                   >
-                    <td className="py-3 px-4 font-mono text-[12px] font-bold text-[#2563EB]">
+                    <td className="py-3 px-4 font-mono text-xs font-bold text-[#2563EB]">
                       {tripId}
                     </td>
                     <td className="py-3 px-4 font-semibold text-[#172033] max-w-[140px] truncate">
@@ -94,32 +94,32 @@ export const TripHistoryView: React.FC<TripHistoryViewProps> = ({ trips, onSelec
                     <td className="py-3 px-4 font-semibold text-[#172033] max-w-[140px] truncate">
                       {destLabel}
                     </td>
-                    <td className="py-3 px-4 font-mono text-[12px] font-bold text-[#2563EB]">
+                    <td className="py-3 px-4 font-mono text-xs font-bold text-[#2563EB]">
                       {distanceMiles.toFixed(1)} mi
                     </td>
-                    <td className="py-3 px-4 font-mono text-[12px] text-[#526174]">
+                    <td className="py-3 px-4 font-mono text-xs text-[#526174]">
                       {hours}h {mins}m
                     </td>
-                    <td className="py-3 px-4 font-mono text-[12px] font-bold text-[#172033]">
+                    <td className="py-3 px-4 font-mono text-xs font-bold text-[#172033]">
                       {daysCount}d
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                        className={`inline-flex items-center gap-1.5 font-mono text-xs font-bold px-2.5 py-0.5 rounded-full ${
                           isCompliant
-                            ? 'text-[#15803D] bg-[#EFFBF3] border border-[#BBF7D0]'
+                            ? 'text-[#16A34A] bg-[#ECFDF5] border border-[#A7F3D0]'
                             : 'text-[#DC2626] bg-[#FEF2F2] border border-[#FECACA]'
                         }`}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${isCompliant ? 'bg-[#16A34A]' : 'bg-[#DC2626]'}`} />
-                        {isCompliant ? 'COMPLIANT' : 'VIOLATION'}
+                        {isCompliant ? 'Compliant' : 'Violation'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-[12px] font-mono text-[#526174]">
+                    <td className="py-3 px-4 text-xs font-mono text-[#526174]">
                       {createdDate}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className="text-[12px] text-[#2563EB] group-hover:text-[#1D4ED8] font-bold inline-flex items-center gap-0.5">
+                      <span className="text-xs text-[#2563EB] group-hover:text-[#1D4ED8] font-bold inline-flex items-center gap-0.5">
                         <span>Load</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </span>
