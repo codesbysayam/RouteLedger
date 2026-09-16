@@ -70,6 +70,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
         attributionControl: true,
         fadeAnimation: false,
         zoomAnimation: false,
+        scrollWheelZoom: false,
       });
 
       // Initial tile layer

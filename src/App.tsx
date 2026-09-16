@@ -227,8 +227,16 @@ export default function App() {
             onPlanTrip={executePlan}
             isLoading={isLoading}
             onLoadExample={handleLoadDemo}
-            currentOrigin={tripPlan?.origin?.display_name || 'Richmond, VA'}
-            currentDestination={tripPlan?.destination?.display_name || 'Newark, NJ'}
+            currentOrigin={
+              tripPlan?.origin?.city && tripPlan?.origin?.state
+                ? `${tripPlan.origin.city}, ${tripPlan.origin.state}`
+                : tripPlan?.origin?.display_name || 'Richmond, VA'
+            }
+            currentDestination={
+              tripPlan?.destination?.city && tripPlan?.destination?.state
+                ? `${tripPlan.destination.city}, ${tripPlan.destination.state}`
+                : tripPlan?.destination?.display_name || 'Newark, NJ'
+            }
             initialCycleUsed={tripPlan?.initial_cycle_used ?? 20.0}
           />
 
